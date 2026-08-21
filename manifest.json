@@ -3,12 +3,12 @@
   "name": "Kpembe M/A Junior High School",
   "icons": [
     {
-      "src": "https://via.placeholder.com/192/E65100/FFFFFF?text=KPM",
+      "src": "logo1.png",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "https://via.placeholder.com/512/E65100/FFFFFF?text=KPM",
+      "src": "logo2.png",
       "type": "image/png",
       "sizes": "512x512"
     }

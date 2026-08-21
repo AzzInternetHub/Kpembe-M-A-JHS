@@ -2,36 +2,86 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Admin Dashboard | Kpembe M/A JHS</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    /* Specific Admin Layout Adjustments */
+    .admin-nav-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+    }
+    .remove-btn {
+      background: #ef4444;
+      color: white;
+      border: none;
+      padding: 0.5rem 0.8rem;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.2s ease;
+    }
+    .remove-btn:hover {
+      background: #dc2626;
+    }
+    .subject-row {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr auto;
+      gap: 0.5rem;
+      align-items: center;
+      margin-bottom: 0.75rem;
+    }
+    @media (max-width: 600px) {
+      .subject-row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
-<body style="background:#f0f2f5;">
+<body>
 
+  <!-- Glass Header -->
   <header>
-    <div class="brand">
-      <h1>Kpembe Admin Control Panel</h1>
+    <div class="admin-nav-bar">
+      <div class="brand">
+        <!-- =============================================================== -->
+        <!-- ADMIN PANEL LOGO                                                -->
+        <!-- Uses logo.png with fallback placeholder if image isn't found    -->
+        <!-- =============================================================== -->
+        <img src="logo.png" onerror="this.onerror=null; this.src='https://via.placeholder.com/60/E65100/FFFFFF?text=KPM';" alt="Kpembe Logo" class="school-logo">
+        
+        <div class="brand-text">
+          <h1>Admin Control Panel</h1>
+          <p>Administrative Management Portal</p>
+        </div>
+      </div>
+      <a href="index.html" class="btn btn-sm">Main Website &rarr;</a>
     </div>
-    <a href="index.html" class="btn">Back to Main Website</a>
   </header>
 
   <main class="container">
 
     <!-- Upload Results Module -->
     <section class="card" style="margin-bottom: 2rem;">
-      <h3>Upload Student Examination Results</h3>
+      <div class="section-header" style="margin-bottom: 1.5rem;">
+        <h3>Upload Student Examination Results</h3>
+        <p style="color: var(--muted-text); font-size: 0.9rem;">Record continuous assessment and exam scores. Ranks and serial numbers will be computed automatically.</p>
+      </div>
+
       <form id="uploadResultsForm">
         <div class="grid">
           <div class="form-group">
-            <label>Student Full Name</label>
-            <input type="text" id="adminName" required>
+            <label for="adminName">Student Full Name</label>
+            <input type="text" id="adminName" required placeholder="e.g. Alhassan Abdul">
           </div>
           <div class="form-group">
-            <label>Date of Birth</label>
+            <label for="adminDob">Date of Birth</label>
             <input type="date" id="adminDob" required>
           </div>
           <div class="form-group">
-            <label>Class Category</label>
+            <label for="adminClass">Class Category</label>
             <select id="adminClass" required>
               <option value="JHS 1">JHS 1</option>
               <option value="JHS 2">JHS 2</option>
@@ -40,47 +90,79 @@
             </select>
           </div>
           <div class="form-group">
-            <label>Academic Year</label>
+            <label for="adminYear">Academic Year</label>
             <input type="text" id="adminYear" placeholder="2025/2026" required>
           </div>
         </div>
 
-        <h4 style="margin: 1rem 0;">Subject Records</h4>
+        <h4 style="margin: 1.5rem 0 0.8rem 0; color: var(--primary-orange);">Subject Scores Breakdown</h4>
+        
         <div id="subjectRows">
-          <div class="grid subject-row" style="margin-bottom: 0.5rem;">
-            <input type="text" class="sub-title" placeholder="Subject Title (e.g. English)" required>
-            <input type="number" class="sub-ca" placeholder="Continuous Assessment (Max 30)" max="30" required>
-            <input type="number" class="sub-exam" placeholder="Exam Score (Max 70)" max="70" required>
+          <div class="subject-row">
+            <input type="text" class="sub-title" placeholder="Subject Title (e.g. English Language)" required>
+            <input type="number" class="sub-ca" placeholder="C.A. (Max 30)" max="30" min="0" required>
+            <input type="number" class="sub-exam" placeholder="Exam (Max 70)" max="70" min="0" required>
+            <div></div>
           </div>
         </div>
 
-        <button type="button" id="addSubjectBtn" class="btn" style="background:#555; margin-bottom: 1rem;">+ Add Subject</button>
-        <br>
-        <button type="submit" class="btn">Submit & Calculate Results</button>
+        <div style="display: flex; gap: 1rem; margin-top: 1rem; flex-wrap: wrap;">
+          <button type="button" id="addSubjectBtn" class="btn" style="background: var(--muted-text);">+ Add Subject Field</button>
+          <button type="submit" id="submitResultsBtn" class="btn">
+            <span class="btn-text">Submit & Calculate Results</span>
+          </button>
+        </div>
       </form>
     </section>
 
     <!-- Staff Management -->
     <section class="card" style="margin-bottom: 2rem;">
       <h3>Add Staff Member</h3>
+      <p style="color: var(--muted-text); font-size: 0.9rem; margin-bottom: 1rem;">Add teachers and administration personnel to the public website directory.</p>
+      
       <form id="addStaffForm">
         <div class="grid">
-          <div class="form-group"><label>Full Name</label><input type="text" id="stfName" required></div>
-          <div class="form-group"><label>Email</label><input type="email" id="stfEmail" required></div>
-          <div class="form-group"><label>Photo URL</label><input type="url" id="stfPhoto" required></div>
+          <div class="form-group">
+            <label for="stfName">Full Name</label>
+            <input type="text" id="stfName" required placeholder="e.g. Mr. Ibrahim Musah">
+          </div>
+          <div class="form-group">
+            <label for="stfEmail">Email Address</label>
+            <input type="email" id="stfEmail" required placeholder="teacher@kpembejhs.edu.gh">
+          </div>
+          <div class="form-group">
+            <label for="stfPhoto">Photo Direct URL</label>
+            <input type="url" id="stfPhoto" required placeholder="https://images.unsplash.com/...">
+          </div>
         </div>
-        <div class="form-group"><label>Short Bio</label><textarea id="stfBio" rows="2" required></textarea></div>
+        <div class="form-group">
+          <label for="stfBio">Short Profile / Bio</label>
+          <textarea id="stfBio" rows="2" placeholder="Subject teacher / Head of Department..." required></textarea>
+        </div>
         <button type="submit" class="btn">Save Staff Member</button>
       </form>
     </section>
 
     <!-- News Updates -->
     <section class="card" style="margin-bottom: 2rem;">
-      <h3>Publish News Update</h3>
+      <h3>Publish Announcement / News</h3>
+      <p style="color: var(--muted-text); font-size: 0.9rem; margin-bottom: 1rem;">Post latest announcements for parents and students.</p>
+      
       <form id="addNewsForm">
-        <div class="form-group"><label>News Title</label><input type="text" id="newsTitle" required></div>
-        <div class="form-group"><label>Image URL</label><input type="url" id="newsImg" required></div>
-        <div class="form-group"><label>Content</label><textarea id="newsContent" rows="3" required></textarea></div>
+        <div class="grid">
+          <div class="form-group">
+            <label for="newsTitle">Announcement Title</label>
+            <input type="text" id="newsTitle" required placeholder="e.g. End of Term PTA Meeting">
+          </div>
+          <div class="form-group">
+            <label for="newsImg">Feature Image URL</label>
+            <input type="url" id="newsImg" required placeholder="https://images.unsplash.com/...">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="newsContent">Announcement Content</label>
+          <textarea id="newsContent" rows="3" placeholder="Write the full details here..." required></textarea>
+        </div>
         <button type="submit" class="btn">Publish Announcement</button>
       </form>
     </section>
@@ -88,26 +170,34 @@
     <!-- Read Anonymous Feedback -->
     <section class="card">
       <h3>Submitted Feedback & Complaints</h3>
-      <button id="loadComplaintsBtn" class="btn" style="margin: 1rem 0;">Refresh Feedback</button>
+      <p style="color: var(--muted-text); font-size: 0.9rem; margin-bottom: 1rem;">Review anonymous messages submitted via the online feedback portal.</p>
+      
+      <button id="loadComplaintsBtn" class="btn" style="background: var(--muted-text); margin-bottom: 1.5rem;">
+        🔄 Refresh Feedback List
+      </button>
+
       <div id="complaintsList"></div>
     </section>
 
   </main>
 
+  <footer>
+    <p>&copy; 2026 KPEMBE M/A Junior High School Administrative Panel.</p>
+  </footer>
+
   <script>
-    // Configurable Google Apps Script Web App Endpoint URL
     const API_URL = 'https://script.google.com/macros/s/AKfycbxGnfXB2r_MFJJEpHN9I8PWETb9EW57Y954WYmNMsJ5Bttn-EPuzgvYjGoIeA-Kt5xC/exec';
 
     // Add Dynamic Subject Inputs
     document.getElementById('addSubjectBtn')?.addEventListener('click', () => {
       const container = document.getElementById('subjectRows');
       const row = document.createElement('div');
-      row.className = 'grid subject-row';
-      row.style.marginBottom = '0.5rem';
+      row.className = 'subject-row';
       row.innerHTML = `
         <input type="text" class="sub-title" placeholder="Subject Title" required>
-        <input type="number" class="sub-ca" placeholder="C.A. Score (30)" max="30" required>
-        <input type="number" class="sub-exam" placeholder="Exam Score (70)" max="70" required>
+        <input type="number" class="sub-ca" placeholder="C.A. (30)" max="30" min="0" required>
+        <input type="number" class="sub-exam" placeholder="Exam (70)" max="70" min="0" required>
+        <button type="button" class="remove-btn" onclick="this.parentElement.remove()">&times;</button>
       `;
       container.appendChild(row);
     });
@@ -116,6 +206,10 @@
     document.getElementById('uploadResultsForm')?.addEventListener('submit', async (e) => {
       e.preventDefault();
       
+      const submitBtn = document.getElementById('submitResultsBtn');
+      submitBtn.disabled = true;
+      submitBtn.innerText = 'Publishing...';
+
       const subjects = [];
       document.querySelectorAll('.subject-row').forEach(row => {
         subjects.push({
@@ -135,8 +229,11 @@
       };
 
       const res = await postData(payload);
+      submitBtn.disabled = false;
+      submitBtn.innerText = 'Submit & Calculate Results';
+
       if (res.status === 'success') {
-        alert(`Results published successfully!\nGenerated Serial Number: ${res.serial}`);
+        alert(`Results published successfully!\n\nGenerated Unique Serial Number:\n${res.serial}`);
         e.target.reset();
       } else {
         alert('Upload Error: ' + res.message);
@@ -154,7 +251,10 @@
         bio: document.getElementById('stfBio').value
       };
       const res = await postData(payload);
-      if (res.status === 'success') { alert('Staff Member Added!'); e.target.reset(); }
+      if (res.status === 'success') { 
+        alert('Staff Member Saved!'); 
+        e.target.reset(); 
+      }
     });
 
     // Handle News Submission
@@ -167,30 +267,45 @@
         content: document.getElementById('newsContent').value
       };
       const res = await postData(payload);
-      if (res.status === 'success') { alert('News Published!'); e.target.reset(); }
+      if (res.status === 'success') { 
+        alert('News Published!'); 
+        e.target.reset(); 
+      }
     });
 
     // Load Complaints
     document.getElementById('loadComplaintsBtn')?.addEventListener('click', async () => {
+      const btn = document.getElementById('loadComplaintsBtn');
+      btn.innerText = 'Loading...';
       const res = await postData({ action: 'getComplaints' });
+      btn.innerText = '🔄 Refresh Feedback List';
+      
       const container = document.getElementById('complaintsList');
       container.innerHTML = '';
-      if(res.data) {
-        res.data.forEach(item => {
-          container.innerHTML += `<div style="border-bottom:1px solid #ddd; padding:0.5rem 0;">
-            <p>${item.Message}</p><small style="color:#777;">${item.Timestamp}</small>
-          </div>`;
+      if(res.data && res.data.length > 0) {
+        res.data.reverse().forEach(item => {
+          container.innerHTML += `
+            <div style="background: rgba(248, 250, 252, 0.9); border: 1px solid #e2e8f0; border-radius: 12px; padding: 1rem; margin-bottom: 0.8rem;">
+              <p style="font-size: 0.95rem; color: var(--dark-text);">${item.Message}</p>
+              <small style="color: var(--muted-text); display: block; margin-top: 0.4rem;">${item.Timestamp}</small>
+            </div>`;
         });
+      } else {
+        container.innerHTML = '<p style="color: var(--muted-text);">No feedback entries received yet.</p>';
       }
     });
 
     async function postData(data) {
-      const res = await fetch(API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify(data)
-      });
-      return await res.json();
+      try {
+        const res = await fetch(API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(data)
+        });
+        return await res.json();
+      } catch (e) {
+        return { status: 'error', message: 'Network connection error' };
+      }
     }
   </script>
 </body>

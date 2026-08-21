@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard | Kpembe M/A JHS</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body style="background:#f0f2f5;">
+
+  <header>
+    <div class="brand">
+      <h1>Kpembe Admin Control Panel</h1>
+    </div>
+    <a href="index.html" class="btn">Back to Main Website</a>
+  </header>
+
+  <main class="container">
+
+    <!-- Upload Results Module -->
+    <section class="card" style="margin-bottom: 2rem;">
+      <h3>Upload Student Examination Results</h3>
+      <form id="uploadResultsForm">
+        <div class="grid">
+          <div class="form-group">
+            <label>Student Full Name</label>
+            <input type="text" id="adminName" required>
+          </div>
+          <div class="form-group">
+            <label>Date of Birth</label>
+            <input type="date" id="adminDob" required>
+          </div>
+          <div class="form-group">
+            <label>Class Category</label>
+            <select id="adminClass" required>
+              <option value="JHS 1">JHS 1</option>
+              <option value="JHS 2">JHS 2</option>
+              <option value="JHS 3">JHS 3</option>
+              <option value="Mock Examinations">Mock Examinations</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Academic Year</label>
+            <input type="text" id="adminYear" placeholder="2025/2026" required>
+          </div>
+        </div>
+
+        <h4 style="margin: 1rem 0;">Subject Records</h4>
+        <div id="subjectRows">
+          <div class="grid subject-row" style="margin-bottom: 0.5rem;">
+            <input type="text" class="sub-title" placeholder="Subject Title (e.g. English)" required>
+            <input type="number" class="sub-ca" placeholder="Continuous Assessment (Max 30)" max="30" required>
+            <input type="number" class="sub-exam" placeholder="Exam Score (Max 70)" max="70" required>
+          </div>
+        </div>
+
+        <button type="button" id="addSubjectBtn" class="btn" style="background:#555; margin-bottom: 1rem;">+ Add Subject</button>
+        <br>
+        <button type="submit" class="btn">Submit & Calculate Results</button>
+      </form>
+    </section>
+
+    <!-- Staff Management -->
+    <section class="card" style="margin-bottom: 2rem;">
+      <h3>Add Staff Member</h3>
+      <form id="addStaffForm">
+        <div class="grid">
+          <div class="form-group"><label>Full Name</label><input type="text" id="stfName" required></div>
+          <div class="form-group"><label>Email</label><input type="email" id="stfEmail" required></div>
+          <div class="form-group"><label>Photo URL</label><input type="url" id="stfPhoto" required></div>
+        </div>
+        <div class="form-group"><label>Short Bio</label><textarea id="stfBio" rows="2" required></textarea></div>
+        <button type="submit" class="btn">Save Staff Member</button>
+      </form>
+    </section>
+
+    <!-- News Updates -->
+    <section class="card" style="margin-bottom: 2rem;">
+      <h3>Publish News Update</h3>
+      <form id="addNewsForm">
+        <div class="form-group"><label>News Title</label><input type="text" id="newsTitle" required></div>
+        <div class="form-group"><label>Image URL</label><input type="url" id="newsImg" required></div>
+        <div class="form-group"><label>Content</label><textarea id="newsContent" rows="3" required></textarea></div>
+        <button type="submit" class="btn">Publish Announcement</button>
+      </form>
+    </section>
+
+    <!-- Read Anonymous Feedback -->
+    <section class="card">
+      <h3>Submitted Feedback & Complaints</h3>
+      <button id="loadComplaintsBtn" class="btn" style="margin: 1rem 0;">Refresh Feedback</button>
+      <div id="complaintsList"></div>
+    </section>
+
+  </main>
+
+  <script>
+    // Configurable Google Apps Script Web App Endpoint URL
+    const API_URL = 'https://script.google.com/macros/s/AKfycbxGnfXB2r_MFJJEpHN9I8PWETb9EW57Y954WYmNMsJ5Bttn-EPuzgvYjGoIeA-Kt5xC/exec';
+
+    // Add Dynamic Subject Inputs
+    document.getElementById('addSubjectBtn')?.addEventListener('click', () => {
+      const container = document.getElementById('subjectRows');
+      const row = document.createElement('div');
+      row.className = 'grid subject-row';
+      row.style.marginBottom = '0.5rem';
+      row.innerHTML = `
+        <input type="text" class="sub-title" placeholder="Subject Title" required>
+        <input type="number" class="sub-ca" placeholder="C.A. Score (30)" max="30" required>
+        <input type="number" class="sub-exam" placeholder="Exam Score (70)" max="70" required>
+      `;
+      container.appendChild(row);
+    });
+
+    // Handle Upload Results Submissions
+    document.getElementById('uploadResultsForm')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const subjects = [];
+      document.querySelectorAll('.subject-row').forEach(row => {
+        subjects.push({
+          title: row.querySelector('.sub-title').value,
+          ca: row.querySelector('.sub-ca').value,
+          exam: row.querySelector('.sub-exam').value
+        });
+      });
+
+      const payload = {
+        action: 'uploadResults',
+        studentName: document.getElementById('adminName').value,
+        dob: document.getElementById('adminDob').value,
+        className: document.getElementById('adminClass').value,
+        academicYear: document.getElementById('adminYear').value,
+        subjects: subjects
+      };
+
+      const res = await postData(payload);
+      if (res.status === 'success') {
+        alert(`Results published successfully!\nGenerated Serial Number: ${res.serial}`);
+        e.target.reset();
+      } else {
+        alert('Upload Error: ' + res.message);
+      }
+    });
+
+    // Handle Staff Submission
+    document.getElementById('addStaffForm')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const payload = {
+        action: 'addStaff',
+        name: document.getElementById('stfName').value,
+        email: document.getElementById('stfEmail').value,
+        photoUrl: document.getElementById('stfPhoto').value,
+        bio: document.getElementById('stfBio').value
+      };
+      const res = await postData(payload);
+      if (res.status === 'success') { alert('Staff Member Added!'); e.target.reset(); }
+    });
+
+    // Handle News Submission
+    document.getElementById('addNewsForm')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const payload = {
+        action: 'postNews',
+        title: document.getElementById('newsTitle').value,
+        imageUrl: document.getElementById('newsImg').value,
+        content: document.getElementById('newsContent').value
+      };
+      const res = await postData(payload);
+      if (res.status === 'success') { alert('News Published!'); e.target.reset(); }
+    });
+
+    // Load Complaints
+    document.getElementById('loadComplaintsBtn')?.addEventListener('click', async () => {
+      const res = await postData({ action: 'getComplaints' });
+      const container = document.getElementById('complaintsList');
+      container.innerHTML = '';
+      if(res.data) {
+        res.data.forEach(item => {
+          container.innerHTML += `<div style="border-bottom:1px solid #ddd; padding:0.5rem 0;">
+            <p>${item.Message}</p><small style="color:#777;">${item.Timestamp}</small>
+          </div>`;
+        });
+      }
+    });
+
+    async function postData(data) {
+      const res = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(data)
+      });
+      return await res.json();
+    }
+  </script>
+</body>
+</html>

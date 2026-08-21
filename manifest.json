@@ -1,0 +1,20 @@
+{
+  "short_name": "KpembeJHS",
+  "name": "Kpembe M/A Junior High School",
+  "icons": [
+    {
+      "src": "https://via.placeholder.com/192/E65100/FFFFFF?text=KPM",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "https://via.placeholder.com/512/E65100/FFFFFF?text=KPM",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "./index.html",
+  "background_color": "#F8F9FA",
+  "theme_color": "#E65100",
+  "display": "standalone"
+}

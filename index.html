@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kpembe M/A Junior High School</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.json">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+
+  <header>
+    <div class="brand">
+      <img src="https://via.placeholder.com/60/E65100/FFFFFF?text=KPM" alt="Kpembe Logo" class="zoomable">
+      <div class="brand-text">
+        <h1>Kpembe M/A JHS</h1>
+        <p>Education and Culture for Development</p>
+      </div>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="#about">About</a></li>
+        <li><a href="#results">Results Portal</a></li>
+        <li><a href="#news">News</a></li>
+        <li><a href="#staff">Staff</a></li>
+        <li><a href="#complaints">Feedback</a></li>
+    
+      </ul>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h2>Welcome to KPEMBE M/A Junior High School</h2>
+    <p>Education and Culture for Development</p>
+    <a href="#results" class="btn">Check Results Now</a>
+  </section>
+
+  <main class="container">
+    
+    <!-- Quick Access Links -->
+    <section class="grid" style="margin-bottom: 2rem;">
+      <div class="card">
+        <h3>Academic Calendar</h3>
+        <p>View upcoming academic schedules, terms, and event dates.</p>
+      </div>
+      <div class="card">
+        <h3>Check Results</h3>
+        <p>Fast and easy online access to student examination scores.</p>
+        <a href="#results" class="btn" style="margin-top: 1rem;">Go to Portal</a>
+      </div>
+      <div class="card">
+        <h3>Latest News</h3>
+        <p>Stay current with events happening in Kpembe (Salaga - East Gonja Municipal).</p>
+      </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="card" style="margin-bottom: 2rem;">
+      <h3>About Our School</h3>
+      <p><strong>Location:</strong> Kpembe (Salaga - East Gonja Municipal), Savannah Region.</p>
+      <br>
+      <h4>Our History</h4>
+      <p>KPEMBE M/A Junior High School was established in 1987 with the mission to provide quality education to the children of Kpembe and surrounding communities. Over the years, we have grown to become one of the most respected educational institutions in the region.</p>
+      <br>
+      <h4>Our Mission</h4>
+      <p>To provide holistic education that develops students academically, morally, and socially, preparing them to become responsible citizens and leaders of tomorrow.</p>
+      <br>
+      <h4>Our Vision</h4>
+      <p>To be a center of academic excellence that nurtures talents and potentials of students for national and global impact.</p>
+      <br>
+      <h4>Our Facilities</h4>
+      <ul style="margin-left: 1.5rem;">
+        <li>Green field for sports</li>
+        <li>A modern Computer lab</li>
+        <li>Adequate classrooms</li>
+      </ul>
+    </section>
+
+    <!-- Results Portal Section -->
+    <section id="results" class="card" style="margin-bottom: 2rem;">
+      <h3>Student Results Checker</h3>
+      <p style="margin-bottom: 1rem;">Enter your matching student criteria to generate your terminal report card.</p>
+
+      <form id="resultForm">
+        <div class="grid">
+          <div class="form-group">
+            <label>Student Full Name</label>
+            <input type="text" id="resName" required placeholder="e.g. Alhassan Abdul">
+          </div>
+          <div class="form-group">
+            <label>Date of Birth</label>
+            <input type="date" id="resDob" required>
+          </div>
+          <div class="form-group">
+            <label>Class / Level</label>
+            <select id="resClass" required>
+              <option value="JHS 1">JHS 1</option>
+              <option value="JHS 2">JHS 2</option>
+              <option value="JHS 3">JHS 3</option>
+              <option value="Mock Examinations">Mock Examinations</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Unique Serial Number</label>
+            <input type="text" id="resSerial" required placeholder="e.g. KPM-JHS1-4821">
+          </div>
+        </div>
+        <button type="submit" class="btn" style="margin-top: 1rem;">Retrieve Results</button>
+      </form>
+
+      <!-- Dynamic Report Container -->
+      <div id="reportContainer" style="display:none;" class="results-card">
+        <div id="pdfContent">
+          <div class="results-header">
+            <h2>KPEMBE M/A JUNIOR HIGH SCHOOL</h2>
+            <p>Salaga - East Gonja Municipal | Motto: Education and Culture for Development</p>
+            <h3>TERMINAL ACADEMIC REPORT</h3>
+          </div>
+          
+          <div id="studentDetails"></div>
+          
+          <div class="table-responsive">
+            <table id="resultsTable">
+              <thead>
+                <tr>
+                  <th>Subject</th>
+                  <th>C.A. (30%)</th>
+                  <th>Exams (70%)</th>
+                  <th>Total (100%)</th>
+                  <th>Grade</th>
+                  <th>Interpretation</th>
+                  <th>Remarks</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <div id="summaryDetails"></div>
+        </div>
+        <button id="downloadPdfBtn" class="btn" style="margin-top: 1rem;">Download PDF Report</button>
+      </div>
+    </section>
+
+    <!-- Dynamic Staff Directory -->
+    <section id="staff" style="margin-bottom: 2rem;">
+      <h3 style="margin-bottom: 1rem;">School Staff & Faculty</h3>
+      <div id="staffGrid" class="grid"></div>
+    </section>
+
+    <!-- Dynamic News Section -->
+    <section id="news" style="margin-bottom: 2rem;">
+      <h3 style="margin-bottom: 1rem;">Latest School News</h3>
+      <div id="newsGrid" class="grid"></div>
+    </section>
+
+    <!-- Anonymous Complaints Section -->
+    <section id="complaints" class="card">
+      <h3>Anonymous Suggestion & Complaint Box</h3>
+      <p>Your feedback is confidential. Help us make Kpembe M/A JHS better.</p>
+      <form id="complaintForm" style="margin-top: 1rem;">
+        <div class="form-group">
+          <textarea id="complaintMsg" rows="4" placeholder="Write your anonymous suggestions or concerns here..." required></textarea>
+        </div>
+        <button type="submit" class="btn">Submit Feedback</button>
+      </form>
+    </section>
+
+  </main>
+
+  <!-- Lightbox Modal for Images -->
+  <div id="lightbox" class="lightbox">
+    <img id="lightboxImg" src="" alt="Zoomed View">
+  </div>
+
+  <footer>
+    <p>&copy; 2026 KPEMBE M/A Junior High School. All rights reserved.</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

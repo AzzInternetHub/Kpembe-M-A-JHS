@@ -1,10 +1,12 @@
 /**
- * KPEMBE M/A JHS FRONTEND SCRIPT
+ * KPEMBE M/A JHS FRONTEND ENGINE & PWA CONTROLLER
  */
 
 const API_URL = 'https://script.google.com/macros/s/AKfycbxGnfXB2r_MFJJEpHN9I8PWETb9EW57Y954WYmNMsJ5Bttn-EPuzgvYjGoIeA-Kt5xC/exec';
 
 document.addEventListener('DOMContentLoaded', () => {
+  initTabs();
+  initPWAInstallPrompt();
   initImageLightbox();
   loadStaffData();
   loadNewsData();
@@ -15,6 +17,9 @@ document.addEventListener('DOMContentLoaded', () => {
     resultForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       
+      const submitBtn = document.getElementById('searchSubmitBtn');
+      setLoadingState(submitBtn, true);
+
       const payload = {
         action: 'checkResult',
         name: document.getElementById('resName').value,
@@ -24,6 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
       };
 
       const response = await postData(payload);
+      setLoadingState(submitBtn, false);
       
       if (response.status === 'success') {
         displayResults(response.result);
@@ -56,6 +62,76 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
+
+// Tab Navigation Manager
+function initTabs() {
+  const switchTab = (targetId) => {
+    // Hide all tabs
+    document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+    // Deactivate all desktop/mobile buttons
+    document.querySelectorAll('.nav-tab, .mobile-tab-btn').forEach(btn => btn.classList.remove('active'));
+
+    // Activate selected tab & matching buttons
+    const activeTab = document.getElementById(targetId);
+    if (activeTab) {
+      activeTab.classList.add('active');
+      document.querySelectorAll(`[data-target="${targetId}"]`).forEach(btn => btn.classList.add('active'));
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
+  // Delegate click events for tab triggers
+  document.addEventListener('click', (e) => {
+    const targetBtn = e.target.closest('[data-target]');
+    if (targetBtn) {
+      const targetTabId = targetBtn.getAttribute('data-target');
+      switchTab(targetTabId);
+    }
+  });
+}
+
+// Dynamic PWA Home Screen Banner Alert
+function initPWAInstallPrompt() {
+  let deferredPrompt;
+  const pwaBanner = document.getElementById('pwaBanner');
+  const installBtn = document.getElementById('pwaInstallBtn');
+  const closeBtn = document.getElementById('pwaCloseBtn');
+  const pwaInstruction = document.getElementById('pwaInstruction');
+
+  // Detect iOS Safari
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
+  if (isIOS) {
+    pwaBanner.style.display = 'flex';
+    pwaInstruction.textContent = 'Tap Share button (iOS) and select "Add to Home Screen"';
+    installBtn.style.display = 'none';
+  }
+
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    pwaBanner.style.display = 'flex';
+  });
+
+  if (installBtn) {
+    installBtn.addEventListener('click', async () => {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        if (outcome === 'accepted') {
+          pwaBanner.style.display = 'none';
+        }
+        deferredPrompt = null;
+      }
+    });
+  }
+
+  if (closeBtn) {
+    closeBtn.addEventListener('click', () => {
+      pwaBanner.style.display = 'none';
+    });
+  }
+}
 
 // Render Dynamic Terminal Result Card
 function displayResults(data) {
@@ -113,45 +189,78 @@ function initImageLightbox() {
   });
 }
 
-// Fetch Staff Directory
+// Fetch Staff Directory with Local Storage Caching
 async function loadStaffData() {
   const staffGrid = document.getElementById('staffGrid');
   if (!staffGrid) return;
-  
+
+  const cached = localStorage.getItem('kpembe_staff');
+  if (cached) renderStaff(JSON.parse(cached));
+
   const res = await postData({ action: 'getStaff' });
   if (res.status === 'success' && res.data.length > 0) {
-    staffGrid.innerHTML = '';
-    res.data.forEach(stf => {
-      staffGrid.innerHTML += `
-        <div class="card" style="text-align:center;">
-          <img src="${stf.PhotoURL}" alt="${stf.Name}" class="zoomable" style="width:100px; height:100px; border-radius:50%; object-fit:cover; margin-bottom:0.5rem;">
-          <h4>${stf.Name}</h4>
-          <p style="font-size:0.85rem; color:#666;">${stf.Email}</p>
-          <p style="margin-top:0.5rem; font-size:0.9rem;">${stf.Bio}</p>
-        </div>
-      `;
-    });
+    localStorage.setItem('kpembe_staff', JSON.stringify(res.data));
+    renderStaff(res.data);
   }
 }
 
-// Fetch News Items
+function renderStaff(data) {
+  const staffGrid = document.getElementById('staffGrid');
+  staffGrid.innerHTML = '';
+  data.forEach(stf => {
+    staffGrid.innerHTML += `
+      <div class="card" style="text-align:center;">
+        <img src="${stf.PhotoURL}" alt="${stf.Name}" class="zoomable" style="width:90px; height:90px; border-radius:50%; object-fit:cover; margin-bottom:0.5rem; border:3px solid var(--light-orange);">
+        <h4>${stf.Name}</h4>
+        <p style="font-size:0.8rem; color:var(--muted-text);">${stf.Email}</p>
+        <p style="margin-top:0.5rem; font-size:0.85rem;">${stf.Bio}</p>
+      </div>
+    `;
+  });
+}
+
+// Fetch News Items with Local Storage Caching
 async function loadNewsData() {
   const newsGrid = document.getElementById('newsGrid');
   if (!newsGrid) return;
 
+  const cached = localStorage.getItem('kpembe_news');
+  if (cached) renderNews(JSON.parse(cached));
+
   const res = await postData({ action: 'getNews' });
   if (res.status === 'success' && res.data.length > 0) {
-    newsGrid.innerHTML = '';
-    res.data.forEach(item => {
-      newsGrid.innerHTML += `
-        <div class="card">
-          <img src="${item.ImageURL}" class="zoomable" style="width:100%; height:180px; object-fit:cover; border-radius:8px; margin-bottom:0.5rem;">
-          <h4>${item.Title}</h4>
-          <small style="color:#888;">${item.Date}</small>
-          <p style="margin-top:0.5rem;">${item.Content}</p>
-        </div>
-      `;
-    });
+    localStorage.setItem('kpembe_news', JSON.stringify(res.data));
+    renderNews(res.data);
+  }
+}
+
+function renderNews(data) {
+  const newsGrid = document.getElementById('newsGrid');
+  newsGrid.innerHTML = '';
+  data.forEach(item => {
+    newsGrid.innerHTML += `
+      <div class="card">
+        <img src="${item.ImageURL}" class="zoomable" style="width:100%; height:160px; object-fit:cover; border-radius:var(--radius-sm); margin-bottom:0.8rem;">
+        <h4>${item.Title}</h4>
+        <small style="color:var(--muted-text);">${item.Date}</small>
+        <p style="margin-top:0.5rem; font-size:0.9rem;">${item.Content}</p>
+      </div>
+    `;
+  });
+}
+
+// Button Loader Helper
+function setLoadingState(button, isLoading) {
+  const btnText = button.querySelector('.btn-text');
+  const spinner = button.querySelector('.spinner');
+  if (isLoading) {
+    button.disabled = true;
+    if (btnText) btnText.style.opacity = '0.5';
+    if (spinner) spinner.style.display = 'inline-block';
+  } else {
+    button.disabled = false;
+    if (btnText) btnText.style.opacity = '1';
+    if (spinner) spinner.style.display = 'none';
   }
 }
 

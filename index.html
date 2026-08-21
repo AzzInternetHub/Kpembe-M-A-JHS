@@ -2,171 +2,257 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Kpembe M/A Junior High School</title>
+  
+  <!-- Preconnect & CDNs -->
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com">
   <link rel="stylesheet" href="style.css">
   <link rel="manifest" href="manifest.json">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
 
+  <!-- ================================================================= -->
+  <!-- FLOATING SIDE INSTALL WIDGET (WHATSAPP STYLE POSITIONING)        -->
+  <!-- ================================================================= -->
+  <div id="pwaBanner" class="pwa-floating-widget" style="display: none;">
+    <div class="pwa-widget-content">
+      <!-- You can swap the icon below with an image if preferred -->
+      <span class="pwa-widget-icon">📱</span>
+      <div class="pwa-widget-text">
+        <strong>Install App</strong>
+        <p id="pwaInstruction">Fast access</p>
+      </div>
+      <button id="pwaInstallBtn" class="btn btn-sm pwa-widget-btn">Install</button>
+      <button id="pwaCloseBtn" class="pwa-widget-close">&times;</button>
+    </div>
+  </div>
+
+  <!-- Main Header -->
   <header>
     <div class="brand">
-      <img src="https://via.placeholder.com/60/E65100/FFFFFF?text=KPM" alt="Kpembe Logo" class="zoomable">
+      <!-- =============================================================== -->
+      <!-- MAIN SCHOOL LOGO                                                -->
+      <!-- Default image set to logo.png with standard fallback            -->
+      <!-- =============================================================== -->
+      <img src="logo.png" onerror="this.onerror=null; this.src='https://via.placeholder.com/60/E65100/FFFFFF?text=KPM';" alt="Kpembe Logo" class="zoomable school-logo">
+      
       <div class="brand-text">
         <h1>Kpembe M/A JHS</h1>
         <p>Education and Culture for Development</p>
       </div>
     </div>
-    <nav>
+    <nav class="desktop-nav">
       <ul>
-        <li><a href="#about">About</a></li>
-        <li><a href="#results">Results Portal</a></li>
-        <li><a href="#news">News</a></li>
-        <li><a href="#staff">Staff</a></li>
-        <li><a href="#complaints">Feedback</a></li>
-    
+        <li><button class="nav-tab active" data-target="homeTab">Home</button></li>
+        <li><button class="nav-tab" data-target="resultsTab">Results Portal</button></li>
+        <li><button class="nav-tab" data-target="newsTab">News</button></li>
+        <li><button class="nav-tab" data-target="staffTab">Staff</button></li>
+        <li><button class="nav-tab" data-target="aboutTab">About</button></li>
+        <li><button class="nav-tab" data-target="feedbackTab">Feedback</button></li>
       </ul>
     </nav>
   </header>
 
-  <section class="hero">
-    <h2>Welcome to KPEMBE M/A Junior High School</h2>
-    <p>Education and Culture for Development</p>
-    <a href="#results" class="btn">Check Results Now</a>
-  </section>
-
   <main class="container">
-    
-    <!-- Quick Access Links -->
-    <section class="grid" style="margin-bottom: 2rem;">
-      <div class="card">
-        <h3>Academic Calendar</h3>
-        <p>View upcoming academic schedules, terms, and event dates.</p>
-      </div>
-      <div class="card">
-        <h3>Check Results</h3>
-        <p>Fast and easy online access to student examination scores.</p>
-        <a href="#results" class="btn" style="margin-top: 1rem;">Go to Portal</a>
-      </div>
-      <div class="card">
-        <h3>Latest News</h3>
-        <p>Stay current with events happening in Kpembe (Salaga - East Gonja Municipal).</p>
-      </div>
-    </section>
 
-    <!-- About Section -->
-    <section id="about" class="card" style="margin-bottom: 2rem;">
-      <h3>About Our School</h3>
-      <p><strong>Location:</strong> Kpembe (Salaga - East Gonja Municipal), Savannah Region.</p>
-      <br>
-      <h4>Our History</h4>
-      <p>KPEMBE M/A Junior High School was established in 1987 with the mission to provide quality education to the children of Kpembe and surrounding communities. Over the years, we have grown to become one of the most respected educational institutions in the region.</p>
-      <br>
-      <h4>Our Mission</h4>
-      <p>To provide holistic education that develops students academically, morally, and socially, preparing them to become responsible citizens and leaders of tomorrow.</p>
-      <br>
-      <h4>Our Vision</h4>
-      <p>To be a center of academic excellence that nurtures talents and potentials of students for national and global impact.</p>
-      <br>
-      <h4>Our Facilities</h4>
-      <ul style="margin-left: 1.5rem;">
-        <li>Green field for sports</li>
-        <li>A modern Computer lab</li>
-        <li>Adequate classrooms</li>
-      </ul>
-    </section>
+    <!-- TAB 1: HOME -->
+    <div id="homeTab" class="tab-content active">
+      <section class="hero">
+        <div class="hero-overlay">
+          <h2>Welcome to KPEMBE M/A JHS</h2>
+          <p>Education and Culture for Development</p>
+          <button class="btn switch-tab-btn" data-target="resultsTab">Check Results Now</button>
+        </div>
+      </section>
 
-    <!-- Results Portal Section -->
-    <section id="results" class="card" style="margin-bottom: 2rem;">
-      <h3>Student Results Checker</h3>
-      <p style="margin-bottom: 1rem;">Enter your matching student criteria to generate your terminal report card.</p>
+      <section class="grid" style="margin-top: 2rem;">
+        <div class="card interactive-card switch-tab-btn" data-target="resultsTab">
+          <h3>Check Results</h3>
+          <p>Fast and secure online access to official student terminal examination scores.</p>
+          <span class="card-link">Go to Portal &rarr;</span>
+        </div>
+        <div class="card interactive-card switch-tab-btn" data-target="newsTab">
+          <h3>Latest News</h3>
+          <p>Stay updated with key announcements and events from Salaga & East Gonja Municipal.</p>
+          <span class="card-link">View Updates &rarr;</span>
+        </div>
+        <div class="card interactive-card switch-tab-btn" data-target="aboutTab">
+          <h3>Our Heritage</h3>
+          <p>Discover our rich academic history, vision, and facilities since 1987.</p>
+          <span class="card-link">Read History &rarr;</span>
+        </div>
+      </section>
+    </div>
 
-      <form id="resultForm">
-        <div class="grid">
-          <div class="form-group">
-            <label>Student Full Name</label>
-            <input type="text" id="resName" required placeholder="e.g. Alhassan Abdul">
+    <!-- TAB 2: RESULTS PORTAL -->
+    <div id="resultsTab" class="tab-content">
+      <section class="card">
+        <div class="section-header">
+          <h3>Student Results Checker</h3>
+          <p>Enter your student criteria below to generate your official terminal report card.</p>
+        </div>
+
+        <form id="resultForm">
+          <div class="grid">
+            <div class="form-group">
+              <label for="resName">Student Full Name</label>
+              <input type="text" id="resName" required placeholder="e.g. Alhassan Abdul">
+            </div>
+            <div class="form-group">
+              <label for="resDob">Date of Birth</label>
+              <input type="date" id="resDob" required>
+            </div>
+            <div class="form-group">
+              <label for="resClass">Class / Level</label>
+              <select id="resClass" required>
+                <option value="JHS 1">JHS 1</option>
+                <option value="JHS 2">JHS 2</option>
+                <option value="JHS 3">JHS 3</option>
+                <option value="Mock Examinations">Mock Examinations</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="resSerial">Unique Serial Number</label>
+              <input type="text" id="resSerial" required placeholder="e.g. KPM-JHS1-4821">
+            </div>
           </div>
-          <div class="form-group">
-            <label>Date of Birth</label>
-            <input type="date" id="resDob" required>
+          <button type="submit" id="searchSubmitBtn" class="btn" style="margin-top: 1.5rem; width: 100%;">
+            <span class="btn-text">Retrieve Results</span>
+            <span class="spinner" style="display:none;"></span>
+          </button>
+        </form>
+
+        <!-- Dynamic Report Container -->
+        <div id="reportContainer" style="display:none;" class="results-card">
+          <div id="pdfContent">
+            <div class="results-header">
+              <!-- =============================================================== -->
+              <!-- REPORT CARD HEADER LOGO                                         -->
+              <!-- Uses logo.png in the printed PDF report card header             -->
+              <!-- =============================================================== -->
+              <img src="logo.png" onerror="this.onerror=null; this.src='https://via.placeholder.com/60/E65100/FFFFFF?text=KPM';" alt="School Logo" class="report-logo">
+              
+              <h2>KPEMBE M/A JUNIOR HIGH SCHOOL</h2>
+              <p>Salaga - East Gonja Municipal | Motto: Education and Culture for Development</p>
+              <h3>TERMINAL ACADEMIC REPORT</h3>
+            </div>
+            
+            <div id="studentDetails"></div>
+            
+            <div class="table-responsive">
+              <table id="resultsTable">
+                <thead>
+                  <tr>
+                    <th>Subject</th>
+                    <th>C.A. (30%)</th>
+                    <th>Exams (70%)</th>
+                    <th>Total (100%)</th>
+                    <th>Grade</th>
+                    <th>Interpretation</th>
+                    <th>Remarks</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+            <div id="summaryDetails"></div>
           </div>
-          <div class="form-group">
-            <label>Class / Level</label>
-            <select id="resClass" required>
-              <option value="JHS 1">JHS 1</option>
-              <option value="JHS 2">JHS 2</option>
-              <option value="JHS 3">JHS 3</option>
-              <option value="Mock Examinations">Mock Examinations</option>
-            </select>
+          <button id="downloadPdfBtn" class="btn" style="margin-top: 1.5rem; width: 100%;">📥 Download PDF Report</button>
+        </div>
+      </section>
+    </div>
+
+    <!-- TAB 3: NEWS SECTION -->
+    <div id="newsTab" class="tab-content">
+      <section>
+        <h3 style="margin-bottom: 1.5rem; color: var(--primary-orange);">Latest School News</h3>
+        <div id="newsGrid" class="grid">
+          <div class="skeleton-card"></div>
+          <div class="skeleton-card"></div>
+        </div>
+      </section>
+    </div>
+
+    <!-- TAB 4: STAFF DIRECTORY -->
+    <div id="staffTab" class="tab-content">
+      <section>
+        <h3 style="margin-bottom: 1.5rem; color: var(--primary-orange);">School Staff & Faculty</h3>
+        <div id="staffGrid" class="grid">
+          <div class="skeleton-card"></div>
+          <div class="skeleton-card"></div>
+        </div>
+      </section>
+    </div>
+
+    <!-- TAB 5: ABOUT SCHOOL -->
+    <div id="aboutTab" class="tab-content">
+      <section class="card">
+        <h3>About Our School</h3>
+        <p style="margin-top:0.5rem;"><strong>Location:</strong> Kpembe (Salaga - East Gonja Municipal), Savannah Region.</p>
+        <hr class="divider">
+        
+        <div class="about-grid">
+          <div>
+            <h4>Our History</h4>
+            <p>KPEMBE M/A Junior High School was established in 1987 with the mission to provide quality education to the children of Kpembe and surrounding communities. Over the years, we have grown to become one of the most respected educational institutions in the region.</p>
           </div>
-          <div class="form-group">
-            <label>Unique Serial Number</label>
-            <input type="text" id="resSerial" required placeholder="e.g. KPM-JHS1-4821">
+          <div>
+            <h4>Our Mission</h4>
+            <p>To provide holistic education that develops students academically, morally, and socially, preparing them to become responsible citizens and leaders of tomorrow.</p>
+          </div>
+          <div>
+            <h4>Our Vision</h4>
+            <p>To be a center of academic excellence that nurtures talents and potentials of students for national and global impact.</p>
+          </div>
+          <div>
+            <h4>Our Facilities</h4>
+            <ul class="styled-list">
+              <li>Standard green field for athletics and sports</li>
+              <li>ICT laboratory</li>
+              <li>Spacious classrooms</li>
+            </ul>
           </div>
         </div>
-        <button type="submit" class="btn" style="margin-top: 1rem;">Retrieve Results</button>
-      </form>
+      </section>
+    </div>
 
-      <!-- Dynamic Report Container -->
-      <div id="reportContainer" style="display:none;" class="results-card">
-        <div id="pdfContent">
-          <div class="results-header">
-            <h2>KPEMBE M/A JUNIOR HIGH SCHOOL</h2>
-            <p>Salaga - East Gonja Municipal | Motto: Education and Culture for Development</p>
-            <h3>TERMINAL ACADEMIC REPORT</h3>
+    <!-- TAB 6: FEEDBACK & COMPLAINTS -->
+    <div id="feedbackTab" class="tab-content">
+      <section class="card">
+        <h3>Anonymous Suggestion & Complaint Box</h3>
+        <p style="margin-bottom: 1rem;">Your feedback is completely confidential. Help us make Kpembe M/A JHS better.</p>
+        
+        <form id="complaintForm">
+          <div class="form-group">
+            <textarea id="complaintMsg" rows="5" placeholder="Write your anonymous suggestions or concerns here..." required></textarea>
           </div>
-          
-          <div id="studentDetails"></div>
-          
-          <div class="table-responsive">
-            <table id="resultsTable">
-              <thead>
-                <tr>
-                  <th>Subject</th>
-                  <th>C.A. (30%)</th>
-                  <th>Exams (70%)</th>
-                  <th>Total (100%)</th>
-                  <th>Grade</th>
-                  <th>Interpretation</th>
-                  <th>Remarks</th>
-                </tr>
-              </thead>
-              <tbody></tbody>
-            </table>
-          </div>
-          <div id="summaryDetails"></div>
-        </div>
-        <button id="downloadPdfBtn" class="btn" style="margin-top: 1rem;">Download PDF Report</button>
-      </div>
-    </section>
-
-    <!-- Dynamic Staff Directory -->
-    <section id="staff" style="margin-bottom: 2rem;">
-      <h3 style="margin-bottom: 1rem;">School Staff & Faculty</h3>
-      <div id="staffGrid" class="grid"></div>
-    </section>
-
-    <!-- Dynamic News Section -->
-    <section id="news" style="margin-bottom: 2rem;">
-      <h3 style="margin-bottom: 1rem;">Latest School News</h3>
-      <div id="newsGrid" class="grid"></div>
-    </section>
-
-    <!-- Anonymous Complaints Section -->
-    <section id="complaints" class="card">
-      <h3>Anonymous Suggestion & Complaint Box</h3>
-      <p>Your feedback is confidential. Help us make Kpembe M/A JHS better.</p>
-      <form id="complaintForm" style="margin-top: 1rem;">
-        <div class="form-group">
-          <textarea id="complaintMsg" rows="4" placeholder="Write your anonymous suggestions or concerns here..." required></textarea>
-        </div>
-        <button type="submit" class="btn">Submit Feedback</button>
-      </form>
-    </section>
+          <button type="submit" class="btn" style="margin-top: 1rem;">Submit Feedback</button>
+        </form>
+      </section>
+    </div>
 
   </main>
+
+  <!-- Mobile Bottom Navigation Bar -->
+  <div class="mobile-nav">
+    <button class="mobile-tab-btn active" data-target="homeTab">
+      <span class="nav-label">Home</span>
+    </button>
+    <button class="mobile-tab-btn" data-target="resultsTab">
+      <span class="nav-label">Results</span>
+    </button>
+    <button class="mobile-tab-btn" data-target="newsTab">
+      <span class="nav-label">News</span>
+    </button>
+    <button class="mobile-tab-btn" data-target="staffTab">
+      <span class="nav-label">Staff</span>
+    </button>
+    <button class="mobile-tab-btn" data-target="feedbackTab">
+      <span class="nav-label">Feedback</span>
+    </button>
+  </div>
 
   <!-- Lightbox Modal for Images -->
   <div id="lightbox" class="lightbox">

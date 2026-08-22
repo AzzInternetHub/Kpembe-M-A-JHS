@@ -5,20 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Kpembe M/A Junior High School</title>
   
-  <!-- Preconnect & CDNs -->
+  <!-- Preconnect & Lightning Connections -->
+  <link rel="preconnect" href="https://script.google.com" crossorigin>
+  <link rel="dns-prefetch" href="https://script.google.com">
   <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+  
   <link rel="stylesheet" href="style.css">
   <link rel="manifest" href="manifest.json">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
 
-  <!-- ================================================================= -->
-  <!-- FLOATING SIDE INSTALL WIDGET (WHATSAPP STYLE POSITIONING)        -->
-  <!-- ================================================================= -->
+  <!-- FLOATING SIDE INSTALL WIDGET -->
   <div id="pwaBanner" class="pwa-floating-widget" style="display: none;">
     <div class="pwa-widget-content">
-      <!-- You can swap the icon below with an image if preferred -->
       <span class="pwa-widget-icon">📱</span>
       <div class="pwa-widget-text">
         <strong>Install App</strong>
@@ -32,11 +32,7 @@
   <!-- Main Header -->
   <header>
     <div class="brand">
-      <!-- =============================================================== -->
-      <!-- MAIN SCHOOL LOGO                                                -->
-      <!-- Default image set to logo.png with standard fallback            -->
-      <!-- =============================================================== -->
-      <img src="logo.png" onerror="this.onerror=null; this.src='https://via.placeholder.com/60/E65100/FFFFFF?text=KPM';" alt="Kpembe Logo" class="zoomable school-logo">
+      <img src="logo.png" onerror="this.onerror=null; this.src='https://via.placeholder.com/60/E65100/FFFFFF?text=KPM';" alt="Kpembe Logo" class="zoomable school-logo" title="Click to view photo">
       
       <div class="brand-text">
         <h1>Kpembe M/A JHS</h1>
@@ -128,11 +124,7 @@
         <div id="reportContainer" style="display:none;" class="results-card">
           <div id="pdfContent">
             <div class="results-header">
-              <!-- =============================================================== -->
-              <!-- REPORT CARD HEADER LOGO                                         -->
-              <!-- Uses logo.png in the printed PDF report card header             -->
-              <!-- =============================================================== -->
-              <img src="logo.png" onerror="this.onerror=null; this.src='https://via.placeholder.com/60/E65100/FFFFFF?text=KPM';" alt="School Logo" class="report-logo">
+              <img src="logo.png" onerror="this.onerror=null; this.src='https://via.placeholder.com/60/E65100/FFFFFF?text=KPM';" alt="School Logo" class="report-logo zoomable" title="Click to view photo">
               
               <h2>KPEMBE M/A JUNIOR HIGH SCHOOL</h2>
               <p>Salaga - East Gonja Municipal | Motto: Education and Culture for Development</p>
@@ -159,7 +151,7 @@
             </div>
             <div id="summaryDetails"></div>
           </div>
-          <button id="downloadPdfBtn" class="btn" style="margin-top: 1.5rem; width: 100%;">📥 Download PDF Report</button>
+          <button id="downloadPdfBtn" class="btn" style="margin-top: 1.5rem; width: 100%;">Download Results</button>
         </div>
       </section>
     </div>
@@ -254,9 +246,12 @@
     </button>
   </div>
 
-  <!-- Lightbox Modal for Images -->
+  <!-- Lightbox Modal for Images with Close Hint -->
   <div id="lightbox" class="lightbox">
-    <img id="lightboxImg" src="" alt="Zoomed View">
+    <div class="lightbox-wrapper">
+      <img id="lightboxImg" src="" alt="Zoomed View">
+      <p class="lightbox-hint">Tap anywhere to close</p>
+    </div>
   </div>
 
   <footer>

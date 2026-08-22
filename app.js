@@ -22,19 +22,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const payload = {
         action: 'checkResult',
-        name: document.getElementById('resName').value,
+        name: document.getElementById('resName').value.trim(),
         dob: document.getElementById('resDob').value,
         className: document.getElementById('resClass').value,
-        serial: document.getElementById('resSerial').value
+        serial: document.getElementById('resSerial').value.trim()
       };
 
-      const response = await postData(payload);
-      setLoadingState(submitBtn, false);
-      
-      if (response.status === 'success') {
-        displayResults(response.result);
-      } else {
-        alert(response.message);
+      try {
+        const response = await postData(payload);
+        setLoadingState(submitBtn, false);
+        
+        if (response.status === 'success') {
+          displayResults(response.result);
+        } else {
+          alert(response.message || 'No matching result record found.');
+        }
+      } catch (err) {
+        setLoadingState(submitBtn, false);
+        alert('Network connection error. Please try again.');
       }
     });
   }
@@ -66,12 +71,9 @@ document.addEventListener('DOMContentLoaded', () => {
 // Tab Navigation Manager
 function initTabs() {
   const switchTab = (targetId) => {
-    // Hide all tabs
     document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-    // Deactivate all desktop/mobile buttons
     document.querySelectorAll('.nav-tab, .mobile-tab-btn').forEach(btn => btn.classList.remove('active'));
 
-    // Activate selected tab & matching buttons
     const activeTab = document.getElementById(targetId);
     if (activeTab) {
       activeTab.classList.add('active');
@@ -80,7 +82,6 @@ function initTabs() {
     }
   };
 
-  // Delegate click events for tab triggers
   document.addEventListener('click', (e) => {
     const targetBtn = e.target.closest('[data-target]');
     if (targetBtn) {
@@ -98,7 +99,6 @@ function initPWAInstallPrompt() {
   const closeBtn = document.getElementById('pwaCloseBtn');
   const pwaInstruction = document.getElementById('pwaInstruction');
 
-  // Detect iOS Safari
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 
   if (isIOS) {
@@ -141,31 +141,34 @@ function displayResults(data) {
   const summaryDiv = document.getElementById('summaryDetails');
 
   detailsDiv.innerHTML = `
-    <p><strong>Student Name:</strong> ${data.name}</p>
-    <p><strong>Serial No:</strong> ${data.serial} | <strong>Class:</strong> ${data.className} (${data.year})</p>
-    <p><strong>Date of Birth:</strong> ${data.dob}</p>
-    <br>
+    <div style="margin-bottom: 1rem; background: var(--light-bg); padding: 0.85rem; border-radius: var(--radius-sm); border: 1px solid var(--glass-border);">
+      <p style="margin-bottom: 0.2rem;"><strong>Student Name:</strong> ${data.name}</p>
+      <p style="margin-bottom: 0.2rem;"><strong>Serial No:</strong> ${data.serial} | <strong>Class:</strong> ${data.className} (${data.year || '2025/2026'})</p>
+      <p><strong>Date of Birth:</strong> ${data.dob}</p>
+    </div>
   `;
 
-  tbody.innerHTML = '';
-  data.subjects.forEach(sub => {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>${sub.title}</td>
-      <td>${sub.ca}</td>
-      <td>${sub.exam}</td>
-      <td>${sub.total}</td>
-      <td>${sub.grade}</td>
-      <td>${sub.interp}</td>
-      <td>${sub.remark}</td>
-    `;
-    tbody.appendChild(tr);
-  });
+  if (data.subjects && data.subjects.length > 0) {
+    tbody.innerHTML = data.subjects.map(sub => `
+      <tr>
+        <td style="font-weight: 600;">${sub.title}</td>
+        <td>${sub.ca}</td>
+        <td>${sub.exam}</td>
+        <td style="font-weight: 700; color: var(--primary-orange);">${sub.total}</td>
+        <td><strong>${sub.grade}</strong></td>
+        <td>${sub.interp}</td>
+        <td>${sub.remark}</td>
+      </tr>
+    `).join('');
+  } else {
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;">No subject results found.</td></tr>`;
+  }
 
   summaryDiv.innerHTML = `
-    <br>
-    <p><strong>Overall Total Score:</strong> ${data.totalScore}</p>
-    <p><strong>Class Rank Position:</strong> ${data.position}</p>
+    <div style="margin-top: 1rem; padding: 0.85rem; background: var(--light-orange); border-radius: var(--radius-sm); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
+      <p><strong>Overall Total Score:</strong> ${data.totalScore}</p>
+      <p><strong>Class Rank Position:</strong> ${data.position}</p>
+    </div>
   `;
 
   container.style.display = 'block';
@@ -178,8 +181,9 @@ function initImageLightbox() {
   const lightboxImg = document.getElementById('lightboxImg');
 
   document.body.addEventListener('click', (e) => {
-    if (e.target.tagName === 'IMG' && (e.target.classList.contains('zoomable') || e.target.closest('.card'))) {
-      lightboxImg.src = e.target.src;
+    const targetImg = e.target.closest('.zoomable') || (e.target.tagName === 'IMG' && e.target.closest('.img-preview-container'));
+    if (targetImg) {
+      lightboxImg.src = targetImg.tagName === 'IMG' ? targetImg.src : targetImg.querySelector('img').src;
       lightbox.style.display = 'flex';
     }
   });
@@ -189,7 +193,7 @@ function initImageLightbox() {
   });
 }
 
-// Fetch Staff Directory with Local Storage Caching
+// Fetch Staff Directory with Local Storage Caching & Image Preview Visuals
 async function loadStaffData() {
   const staffGrid = document.getElementById('staffGrid');
   if (!staffGrid) return;
@@ -206,20 +210,20 @@ async function loadStaffData() {
 
 function renderStaff(data) {
   const staffGrid = document.getElementById('staffGrid');
-  staffGrid.innerHTML = '';
-  data.forEach(stf => {
-    staffGrid.innerHTML += `
-      <div class="card" style="text-align:center;">
-        <img src="${stf.PhotoURL}" alt="${stf.Name}" class="zoomable" style="width:90px; height:90px; border-radius:50%; object-fit:cover; margin-bottom:0.5rem; border:3px solid var(--light-orange);">
-        <h4>${stf.Name}</h4>
-        <p style="font-size:0.8rem; color:var(--muted-text);">${stf.Email}</p>
-        <p style="margin-top:0.5rem; font-size:0.85rem;">${stf.Bio}</p>
+  staffGrid.innerHTML = data.map(stf => `
+    <div class="card" style="text-align:center;">
+      <div class="img-preview-container" style="display:inline-block; position:relative;">
+        <img src="${stf.PhotoURL}" alt="${stf.Name}" class="zoomable" style="width:95px; height:95px; border-radius:50%; object-fit:cover; border:3px solid var(--light-orange);">
+        <span class="photo-hint-badge">🔍 View</span>
       </div>
-    `;
-  });
+      <h4 style="margin-top:0.4rem;">${stf.Name}</h4>
+      <p style="font-size:0.8rem; color:var(--muted-text);">${stf.Email}</p>
+      <p style="margin-top:0.5rem; font-size:0.85rem;">${stf.Bio}</p>
+    </div>
+  `).join('');
 }
 
-// Fetch News Items with Local Storage Caching
+// Fetch News Items with Local Storage Caching & Image Preview Visuals
 async function loadNewsData() {
   const newsGrid = document.getElementById('newsGrid');
   if (!newsGrid) return;
@@ -236,17 +240,17 @@ async function loadNewsData() {
 
 function renderNews(data) {
   const newsGrid = document.getElementById('newsGrid');
-  newsGrid.innerHTML = '';
-  data.forEach(item => {
-    newsGrid.innerHTML += `
-      <div class="card">
-        <img src="${item.ImageURL}" class="zoomable" style="width:100%; height:160px; object-fit:cover; border-radius:var(--radius-sm); margin-bottom:0.8rem;">
-        <h4>${item.Title}</h4>
-        <small style="color:var(--muted-text);">${item.Date}</small>
-        <p style="margin-top:0.5rem; font-size:0.9rem;">${item.Content}</p>
+  newsGrid.innerHTML = data.map(item => `
+    <div class="card">
+      <div class="img-preview-container" style="position:relative; margin-bottom:0.8rem;">
+        <img src="${item.ImageURL}" class="zoomable" style="width:100%; height:160px; object-fit:cover; border-radius:var(--radius-sm); display:block;">
+        <span class="photo-hint-badge">🔍 Click photo to expand</span>
       </div>
-    `;
-  });
+      <h4>${item.Title}</h4>
+      <small style="color:var(--muted-text);">${item.Date}</small>
+      <p style="margin-top:0.5rem; font-size:0.9rem;">${item.Content}</p>
+    </div>
+  `).join('');
 }
 
 // Button Loader Helper
@@ -255,11 +259,11 @@ function setLoadingState(button, isLoading) {
   const spinner = button.querySelector('.spinner');
   if (isLoading) {
     button.disabled = true;
-    if (btnText) btnText.style.opacity = '0.5';
+    if (btnText) btnText.style.display = 'none';
     if (spinner) spinner.style.display = 'inline-block';
   } else {
     button.disabled = false;
-    if (btnText) btnText.style.opacity = '1';
+    if (btnText) btnText.style.display = 'inline';
     if (spinner) spinner.style.display = 'none';
   }
 }

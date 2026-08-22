@@ -58,12 +58,42 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Handle PDF Export Action
+  // Handle PDF Export Action with Mobile & CORS Canvas Fix
   const pdfBtn = document.getElementById('downloadPdfBtn');
   if (pdfBtn) {
     pdfBtn.addEventListener('click', () => {
       const element = document.getElementById('pdfContent');
-      html2pdf().from(element).save('Kpembe_JHS_Result_Report.pdf');
+      
+      const opt = {
+        margin:       [0.5, 0.5, 0.5, 0.5], // top, left, bottom, right in inches
+        filename:     'Kpembe_JHS_Result_Report.pdf',
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { 
+          scale: 2, 
+          useCORS: true,           // Bypasses cross-origin image locking causing blank renders
+          allowTaint: true,        // Allows rendering local & external images safely
+          logging: false,
+          letterRendering: true,
+          scrollY: 0,
+          scrollX: 0
+        },
+        jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+      };
+
+      // Button visual state feedback
+      const originalText = pdfBtn.innerHTML;
+      pdfBtn.innerHTML = '⏳ Generating PDF...';
+      pdfBtn.disabled = true;
+
+      html2pdf().set(opt).from(element).save().then(() => {
+        pdfBtn.innerHTML = originalText;
+        pdfBtn.disabled = false;
+      }).catch(err => {
+        console.error('PDF Generation Error:', err);
+        alert('Could not generate PDF directly. Taking a screenshot is recommended on this browser.');
+        pdfBtn.innerHTML = originalText;
+        pdfBtn.disabled = false;
+      });
     });
   }
 });

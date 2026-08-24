@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Kpembe M/A Junior High School</title>
   
-  <!-- Preconnect & Connections -->
+  <!-- Preconnect & External Resources -->
   <link rel="preconnect" href="https://script.google.com" crossorigin>
   <link rel="dns-prefetch" href="https://script.google.com">
   <link rel="preconnect" href="https://cdnjs.cloudflare.com">
@@ -16,7 +16,7 @@
 </head>
 <body>
 
-  <!-- FLOATING SIDE INSTALL WIDGET (PWA Icons Kept) -->
+  <!-- FLOATING SIDE INSTALL WIDGET -->
   <div id="pwaBanner" class="pwa-floating-widget" style="display: none;">
     <div class="pwa-widget-content">
       <span class="pwa-widget-icon">📱</span>
@@ -29,10 +29,10 @@
     </div>
   </div>
 
-  <!-- Main Header -->
+  <!-- MAIN HEADER -->
   <header>
     <div class="brand">
-      <img src="logo.png" onerror="this.onerror=null; this.src='https://via.placeholder.com/60/E65100/FFFFFF?text=KPM';" alt="Kpembe Logo" class="zoomable school-logo" title="Click to view photo">
+      <img src="logo.png" onerror="this.onerror=null; this.src='https://via.placeholder.com/60/E65100/FFFFFF?text=KPM';" alt="Kpembe Logo" class="zoomable school-logo" title="Click image to enlarge">
       
       <div class="brand-text">
         <h1>Kpembe M/A JHS</h1>
@@ -132,7 +132,7 @@
         <div id="reportContainer" style="display:none;" class="results-card">
           <div id="pdfContent">
             <div class="results-header">
-              <img src="logo.png" onerror="this.onerror=null; this.src='https://via.placeholder.com/60/E65100/FFFFFF?text=KPM';" alt="School Logo" class="report-logo zoomable" title="Click to view photo">
+              <img src="logo.png" onerror="this.onerror=null; this.src='https://via.placeholder.com/60/E65100/FFFFFF?text=KPM';" alt="School Logo" class="report-logo zoomable" title="Click image to enlarge">
               
               <h2>KPEMBE M/A JUNIOR HIGH SCHOOL</h2>
               <p>Salaga - East Gonja Municipal | Motto: Education and Culture for Development</p>
@@ -167,7 +167,10 @@
     <!-- TAB 3: NEWS SECTION -->
     <div id="newsTab" class="tab-content">
       <section>
-        <h3 style="margin-bottom: 1.5rem; color: var(--primary-orange);">Latest School News</h3>
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-bottom: 1rem;">
+          <h3 style="color: var(--primary-orange);">Latest School News</h3>
+          <p class="click-hint-banner">💡 <em>Click any news photo to view full size</em></p>
+        </div>
         <div id="newsGrid" class="grid">
           <div class="skeleton-card"></div>
           <div class="skeleton-card"></div>
@@ -178,7 +181,10 @@
     <!-- TAB 4: STAFF DIRECTORY -->
     <div id="staffTab" class="tab-content">
       <section>
-        <h3 style="margin-bottom: 1.5rem; color: var(--primary-orange);">School Staff & Faculty</h3>
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-bottom: 1rem;">
+          <h3 style="color: var(--primary-orange);">School Staff & Faculty</h3>
+          <p class="click-hint-banner">💡 <em>Tap or click photo to view full image</em></p>
+        </div>
         <div id="staffGrid" class="grid">
           <div class="skeleton-card"></div>
           <div class="skeleton-card"></div>
@@ -254,7 +260,7 @@
     </button>
   </div>
 
-  <!-- Lightbox Modal for Images -->
+  <!-- Fullscreen Lightbox Modal for Zooming Images -->
   <div id="lightbox" class="lightbox">
     <div class="lightbox-wrapper">
       <img id="lightboxImg" src="" alt="Zoomed View">
@@ -262,7 +268,7 @@
     </div>
   </div>
 
-  <!-- Updated Footer Component -->
+  <!-- FOOTER SECTION -->
   <footer>
     <div class="footer-content">
       <p>&copy; 2026 KPEMBE M/A Junior High School. All rights reserved.</p>

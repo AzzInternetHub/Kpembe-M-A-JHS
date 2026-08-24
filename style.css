@@ -26,7 +26,8 @@
 
 body {
   background-color: var(--light-bg);
-  background-image: linear-gradient(rgba(248, 250, 252, 0.92), rgba(248, 250, 252, 0.92)), url('background.png');
+  /* White overlay opacity reduced to 0.35 to clarify the main background image */
+  background-image: linear-gradient(rgba(248, 250, 252, 0.35), rgba(248, 250, 252, 0.35)), url('background.png');
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
@@ -241,7 +242,8 @@ header {
 /* Hero Section */
 .hero {
   position: relative;
-  background: linear-gradient(135deg, rgba(230, 81, 0, 0.88), rgba(15, 23, 42, 0.88)), url('https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1200&q=80');
+  /* Updated to use local background.png with the gradient overlay */
+  background: linear-gradient(135deg, rgba(230, 81, 0, 0.88), rgba(15, 23, 42, 0.88)), url('background.png');
   background-size: cover;
   background-position: center;
   color: white;

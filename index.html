@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Kpembe M/A Junior High School</title>
   
-  <!-- Preconnect & Lightning Connections -->
+  <!-- Preconnect & Connections -->
   <link rel="preconnect" href="https://script.google.com" crossorigin>
   <link rel="dns-prefetch" href="https://script.google.com">
   <link rel="preconnect" href="https://cdnjs.cloudflare.com">
@@ -16,7 +16,7 @@
 </head>
 <body>
 
-  <!-- FLOATING SIDE INSTALL WIDGET -->
+  <!-- FLOATING SIDE INSTALL WIDGET (PWA Icons Kept) -->
   <div id="pwaBanner" class="pwa-floating-widget" style="display: none;">
     <div class="pwa-widget-content">
       <span class="pwa-widget-icon">📱</span>
@@ -39,16 +39,24 @@
         <p>Education and Culture for Development</p>
       </div>
     </div>
-    <nav class="desktop-nav">
-      <ul>
-        <li><button class="nav-tab active" data-target="homeTab">Home</button></li>
-        <li><button class="nav-tab" data-target="resultsTab">Results Portal</button></li>
-        <li><button class="nav-tab" data-target="newsTab">News</button></li>
-        <li><button class="nav-tab" data-target="staffTab">Staff</button></li>
-        <li><button class="nav-tab" data-target="aboutTab">About</button></li>
-        <li><button class="nav-tab" data-target="feedbackTab">Feedback</button></li>
-      </ul>
-    </nav>
+
+    <div class="header-right">
+      <nav class="desktop-nav">
+        <ul>
+          <li><button class="nav-tab active" data-target="homeTab">Home</button></li>
+          <li><button class="nav-tab" data-target="resultsTab">Results Portal</button></li>
+          <li><button class="nav-tab" data-target="newsTab">News</button></li>
+          <li><button class="nav-tab" data-target="staffTab">Staff</button></li>
+          <li><button class="nav-tab" data-target="aboutTab">About</button></li>
+          <li><button class="nav-tab" data-target="feedbackTab">Feedback</button></li>
+        </ul>
+      </nav>
+
+      <!-- Theme Switcher Toggle -->
+      <button id="themeToggleBtn" class="theme-toggle-btn" aria-label="Toggle Mode">
+        <span class="theme-icon">🌙</span>
+      </button>
+    </div>
   </header>
 
   <main class="container">
@@ -133,7 +141,7 @@
             
             <div id="studentDetails"></div>
             
-            <p style="font-size:0.78rem; color:var(--muted-text); text-align:right; margin-bottom:0.4rem;">👉 Swipe/Scroll sideways to view full table</p>
+            <p style="font-size:0.78rem; color:var(--muted-text); text-align:right; margin-bottom:0.4rem;">Swipe/Scroll sideways to view full table</p>
             <div class="table-responsive">
               <table id="resultsTable">
                 <thead>
@@ -190,17 +198,14 @@
             <h4>Our History</h4>
             <p>KPEMBE M/A Junior High School was established in 1987 with the mission to provide quality education to the children of Kpembe and surrounding communities. Over the years, we have grown to become one of the most respected educational institutions in the region.</p>
           </div>
-<br><br>
           <div>
             <h4>Our Mission</h4>
             <p>To provide holistic education that develops students academically, morally, and socially, preparing them to become responsible citizens and leaders of tomorrow.</p>
           </div>
-<br><br>
           <div>
             <h4>Our Vision</h4>
             <p>To be a center of academic excellence that nurtures talents and potentials of students for national and global impact.</p>
           </div>
-<br><br>
           <div>
             <h4>Our Facilities</h4>
             <ul class="styled-list">
@@ -249,7 +254,7 @@
     </button>
   </div>
 
-  <!-- Lightbox Modal for Images with Close Hint -->
+  <!-- Lightbox Modal for Images -->
   <div id="lightbox" class="lightbox">
     <div class="lightbox-wrapper">
       <img id="lightboxImg" src="" alt="Zoomed View">
@@ -257,8 +262,14 @@
     </div>
   </div>
 
+  <!-- Updated Footer Component -->
   <footer>
-    <p>&copy; 2026 KPEMBE M/A Junior High School. All rights reserved. Developed by <strong>Universal Class of 2020</strong></p>
+    <div class="footer-content">
+      <p>&copy; 2026 KPEMBE M/A Junior High School. All rights reserved.</p>
+      <p class="developer-credit">
+        Developed by <strong>Universal Class of 2020</strong> & <strong>Azz Internet Hub</strong>
+      </p>
+    </div>
   </footer>
 
   <script src="app.js"></script>

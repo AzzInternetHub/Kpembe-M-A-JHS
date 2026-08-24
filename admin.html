@@ -329,6 +329,25 @@
       border-color: #ef4444;
     }
 
+    /* Item Card for Dynamic Lists */
+    .manage-item-card {
+      background: #f8fafc;
+      border: 1px solid var(--admin-border);
+      border-radius: 12px;
+      padding: 1.2rem;
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .manage-item-info {
+      flex: 1;
+      min-width: 250px;
+    }
+
     /* Footer styling */
     footer {
       text-align: center;
@@ -356,18 +375,24 @@
         padding: 1rem;
       }
 
-      .remove-btn {
+      /* Fixed: Target ONLY subject row remove buttons so other delete buttons don't get appended text */
+      .subject-row .remove-btn {
         width: 100%;
         height: 38px;
         font-size: 0.9rem;
       }
       
-      .remove-btn::after {
+      .subject-row .remove-btn::after {
         content: " Remove Subject";
       }
 
       .admin-tabs-nav {
         border-radius: 12px;
+      }
+
+      .manage-item-card {
+        flex-direction: column;
+        align-items: flex-start;
       }
     }
   </style>
@@ -488,10 +513,14 @@
     <!-- TAB 2: STAFF MANAGEMENT -->
     <div id="tab-staff" class="tab-content">
       <section class="admin-card">
-        <h3 style="margin-top: 0;">Add Staff Member</h3>
-        <p style="color: var(--admin-text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">Add teachers and administration personnel to the public website directory.</p>
+        <div class="section-header" style="margin-bottom: 1.5rem; border-bottom: 1px solid var(--admin-border); padding-bottom: 0.85rem;">
+          <h3 id="staffFormTitle" style="margin: 0;">Add Staff Member</h3>
+          <p style="color: var(--admin-text-muted); font-size: 0.9rem; margin-top: 0.3rem;">Add teachers and administration personnel to the public website directory.</p>
+        </div>
         
         <form id="addStaffForm">
+          <input type="hidden" id="editStaffId" value="">
+
           <div class="grid">
             <div class="form-group">
               <label for="stfName">Full Name</label>
@@ -510,18 +539,39 @@
             <label for="stfBio">Short Profile / Bio</label>
             <textarea id="stfBio" rows="3" placeholder="Subject teacher / Head of Department..." required></textarea>
           </div>
-          <button type="submit" class="btn" style="margin-top: 1.5rem;">Save Staff Member</button>
+
+          <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+            <button type="submit" id="submitStaffBtn" class="btn">Save Staff Member</button>
+            <button type="button" id="cancelStaffEditBtn" class="btn" style="background: #64748b; display: none; box-shadow: none;">Cancel Edit</button>
+          </div>
         </form>
+      </section>
+
+      <!-- All Staff Directory List -->
+      <section class="admin-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+          <div>
+            <h3 style="margin: 0;">Current Staff Directory</h3>
+            <p style="color: var(--admin-text-muted); font-size: 0.9rem; margin: 0.2rem 0 0 0;">All existing staff entries listed below. Click edit to modify details or delete to remove.</p>
+          </div>
+          <button type="button" onclick="fetchStaffList()" class="btn btn-sm" style="background: #475569; box-shadow: none;">Refresh List</button>
+        </div>
+
+        <div id="staffListResult"></div>
       </section>
     </div>
 
     <!-- TAB 3: NEWS UPDATES -->
     <div id="tab-news" class="tab-content">
       <section class="admin-card">
-        <h3 style="margin-top: 0;">Publish Announcement / News</h3>
-        <p style="color: var(--admin-text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">Post latest announcements for parents and students.</p>
+        <div class="section-header" style="margin-bottom: 1.5rem; border-bottom: 1px solid var(--admin-border); padding-bottom: 0.85rem;">
+          <h3 id="newsFormTitle" style="margin: 0;">Publish Announcement / News</h3>
+          <p style="color: var(--admin-text-muted); font-size: 0.9rem; margin-top: 0.3rem;">Post latest announcements for parents and students.</p>
+        </div>
         
         <form id="addNewsForm">
+          <input type="hidden" id="editNewsId" value="">
+
           <div class="grid">
             <div class="form-group">
               <label for="newsTitle">Announcement Title</label>
@@ -536,8 +586,25 @@
             <label for="newsContent">Announcement Content</label>
             <textarea id="newsContent" rows="4" placeholder="Write the full details here..." required></textarea>
           </div>
-          <button type="submit" class="btn" style="margin-top: 1.5rem;">Publish Announcement</button>
+
+          <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+            <button type="submit" id="submitNewsBtn" class="btn">Publish Announcement</button>
+            <button type="button" id="cancelNewsEditBtn" class="btn" style="background: #64748b; display: none; box-shadow: none;">Cancel Edit</button>
+          </div>
         </form>
+      </section>
+
+      <!-- All News & Announcements List -->
+      <section class="admin-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+          <div>
+            <h3 style="margin: 0;">Published News & Announcements</h3>
+            <p style="color: var(--admin-text-muted); font-size: 0.9rem; margin: 0.2rem 0 0 0;">All published articles listed below. Click edit to make revisions or delete to purge.</p>
+          </div>
+          <button type="button" onclick="fetchNewsList()" class="btn btn-sm" style="background: #475569; box-shadow: none;">Refresh List</button>
+        </div>
+
+        <div id="newsListResult"></div>
       </section>
     </div>
 
@@ -565,6 +632,8 @@
     const API_URL = 'https://script.google.com/macros/s/AKfycbxGnfXB2r_MFJJEpHN9I8PWETb9EW57Y954WYmNMsJ5Bttn-EPuzgvYjGoIeA-Kt5xC/exec';
 
     let currentSearchedRecord = null;
+    let loadedStaffData = [];
+    let loadedNewsData = [];
 
     // Tab Switching Functionality
     function switchTab(tabId, btnElement) {
@@ -573,6 +642,10 @@
 
       document.getElementById(tabId).classList.add('active');
       btnElement.classList.add('active');
+
+      // Auto-load data when clicking into staff or news tabs
+      if (tabId === 'tab-staff') fetchStaffList();
+      if (tabId === 'tab-news') fetchNewsList();
     }
 
     // Dynamic Subject Rows Handler
@@ -592,6 +665,10 @@
       `;
       container.appendChild(row);
     }
+
+    /* ==========================================================================
+       STUDENT RESULTS MANAGEMENT
+       ========================================================================== */
 
     // Search Records Logic
     document.getElementById('searchRecordBtn')?.addEventListener('click', async () => {
@@ -616,10 +693,12 @@
       if(res.status === 'success') {
         currentSearchedRecord = res.result;
         resContainer.innerHTML = `
-          <div style="background: #f8fafc; border: 1px solid var(--primary-orange); border-radius: 12px; padding: 1.2rem; margin-top: 1.25rem;">
-            <p style="margin: 0 0 0.5rem 0;"><strong>Student:</strong> ${res.result.name} | <strong>Serial:</strong> ${res.result.serial}</p>
-            <p style="margin: 0 0 0.5rem 0;"><strong>Class:</strong> ${res.result.className} | <strong>Year:</strong> ${res.result.year || '2025/2026'}</p>
-            <p style="margin: 0 0 1rem 0;"><strong>Total Score:</strong> ${res.result.totalScore} | <strong>Rank:</strong> ${res.result.position}</p>
+          <div class="manage-item-card" style="border-color: var(--primary-orange); margin-top: 1.25rem;">
+            <div class="manage-item-info">
+              <p style="margin: 0;"><strong>Student:</strong> ${res.result.name} | <strong>Serial:</strong> ${res.result.serial}</p>
+              <p style="margin: 0;"><strong>Class:</strong> ${res.result.className} | <strong>Year:</strong> ${res.result.year || '2025/2026'}</p>
+              <p style="margin: 0;"><strong>Total Score:</strong> ${res.result.totalScore} | <strong>Rank:</strong> ${res.result.position}</p>
+            </div>
             <div style="display: flex; gap: 0.5rem;">
               <button type="button" onclick="populateEditForm()" class="btn btn-sm">Edit Scores</button>
               <button type="button" onclick="deleteRecord('${res.result.serial}', '${res.result.className}')" class="remove-btn" style="width: auto; height: auto; font-size: 0.85rem; padding: 0.5rem 1rem;">Delete Record</button>
@@ -631,7 +710,7 @@
       }
     });
 
-    // Populate Edit Form
+    // Populate Results Edit Form
     window.populateEditForm = function() {
       if(!currentSearchedRecord) return;
 
@@ -692,7 +771,7 @@
       }
     };
 
-    // Upload / Edit Submit
+    // Upload / Edit Results Submit
     document.getElementById('uploadResultsForm')?.addEventListener('submit', async (e) => {
       e.preventDefault();
       
@@ -736,38 +815,242 @@
       }
     });
 
-    // Staff Submit
+    /* ==========================================================================
+       STAFF MANAGEMENT MODULE
+       ========================================================================== */
+
+    // Load All Staff
+    async function fetchStaffList() {
+      const container = document.getElementById('staffListResult');
+      container.innerHTML = '<p style="color: var(--admin-text-muted); margin-top: 1rem;">Loading staff entries...</p>';
+
+      const res = await postData({ action: 'getStaff' });
+
+      if (res.status === 'success' && Array.isArray(res.data)) {
+        loadedStaffData = res.data;
+
+        if (loadedStaffData.length === 0) {
+          container.innerHTML = '<p style="color: var(--admin-text-muted); margin-top: 1rem;">No staff entries recorded yet.</p>';
+          return;
+        }
+
+        container.innerHTML = loadedStaffData.map(item => {
+          // Handle case variations from Google Sheet headers
+          const name = item.Name || item.name || 'Unnamed';
+          const email = item.Email || item.email || 'N/A';
+          const bio = item.Bio || item.bio || 'No bio provided';
+          const id = item.ID || item.id || email;
+
+          return `
+            <div class="manage-item-card">
+              <div class="manage-item-info">
+                <p style="margin:0;"><strong>Name:</strong> ${name} | <strong>Email:</strong> ${email}</p>
+                <p style="margin:0; font-size: 0.875rem; color: var(--admin-text-muted);"><strong>Bio:</strong> ${bio}</p>
+              </div>
+              <div style="display: flex; gap: 0.5rem;">
+                <button type="button" onclick="populateStaffEdit('${id}')" class="btn btn-sm">Edit</button>
+                <button type="button" onclick="deleteStaff('${id}')" class="remove-btn" style="width: auto; height: auto; font-size: 0.85rem; padding: 0.5rem 1rem;">Delete</button>
+              </div>
+            </div>
+          `;
+        }).join('');
+      } else {
+        container.innerHTML = `<p style="color: #ef4444; margin-top: 1rem;">${res.message || 'Failed to load staff.'}</p>`;
+      }
+    }
+
+    // Save/Update Staff Submit
     document.getElementById('addStaffForm')?.addEventListener('submit', async (e) => {
       e.preventDefault();
+      const submitBtn = document.getElementById('submitStaffBtn');
+      const editId = document.getElementById('editStaffId').value;
+
+      submitBtn.disabled = true;
+      submitBtn.innerText = 'Saving...';
+
       const payload = {
-        action: 'addStaff',
+        action: editId ? 'editStaff' : 'addStaff',
+        id: editId,
         name: document.getElementById('stfName').value,
         email: document.getElementById('stfEmail').value,
         photoUrl: document.getElementById('stfPhoto').value,
         bio: document.getElementById('stfBio').value
       };
+
       const res = await postData(payload);
+      submitBtn.disabled = false;
+      submitBtn.innerText = 'Save Staff Member';
+
       if (res.status === 'success') { 
-        alert('Staff Member Saved!'); 
-        e.target.reset(); 
+        alert(`Staff Member ${editId ? 'Updated' : 'Saved'}!`); 
+        resetStaffForm();
+        fetchStaffList();
+      } else {
+        alert('Error: ' + res.message);
       }
     });
 
-    // News Submit
+    window.populateStaffEdit = function(id) {
+      const item = loadedStaffData.find(s => ((s.ID || s.id) == id || (s.Email || s.email) == id));
+      if (!item) return;
+
+      document.getElementById('editStaffId').value = item.ID || item.id || item.Email || item.email;
+      document.getElementById('stfName').value = item.Name || item.name || '';
+      document.getElementById('stfEmail').value = item.Email || item.email || '';
+      document.getElementById('stfPhoto').value = item.PhotoURL || item.photoUrl || item.photo || '';
+      document.getElementById('stfBio').value = item.Bio || item.bio || '';
+
+      document.getElementById('staffFormTitle').innerText = 'Edit Staff Member';
+      document.getElementById('submitStaffBtn').innerText = 'Save Changes';
+      document.getElementById('cancelStaffEditBtn').style.display = 'inline-block';
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    document.getElementById('cancelStaffEditBtn')?.addEventListener('click', resetStaffForm);
+
+    function resetStaffForm() {
+      document.getElementById('editStaffId').value = '';
+      document.getElementById('addStaffForm').reset();
+      document.getElementById('staffFormTitle').innerText = 'Add Staff Member';
+      document.getElementById('submitStaffBtn').innerText = 'Save Staff Member';
+      document.getElementById('cancelStaffEditBtn').style.display = 'none';
+    }
+
+    window.deleteStaff = async function(id) {
+      if(!confirm('Are you sure you want to delete this staff member?')) return;
+
+      const res = await postData({
+        action: 'deleteStaff',
+        id: id
+      });
+
+      if(res.status === 'success') {
+        alert('Staff deleted successfully!');
+        fetchStaffList();
+      } else {
+        alert('Delete failed: ' + res.message);
+      }
+    };
+
+    /* ==========================================================================
+       NEWS & ANNOUNCEMENTS MANAGEMENT MODULE
+       ========================================================================== */
+
+    // Load All News
+    async function fetchNewsList() {
+      const container = document.getElementById('newsListResult');
+      container.innerHTML = '<p style="color: var(--admin-text-muted); margin-top: 1rem;">Loading published announcements...</p>';
+
+      const res = await postData({ action: 'getNews' });
+
+      if (res.status === 'success' && Array.isArray(res.data)) {
+        loadedNewsData = res.data;
+
+        if (loadedNewsData.length === 0) {
+          container.innerHTML = '<p style="color: var(--admin-text-muted); margin-top: 1rem;">No announcements published yet.</p>';
+          return;
+        }
+
+        container.innerHTML = loadedNewsData.map(item => {
+          // Handle case variations from Google Sheet headers
+          const title = item.Title || item.title || 'Untitled';
+          const content = item.Content || item.content || '';
+          const id = item.ID || item.id || title;
+
+          return `
+            <div class="manage-item-card">
+              <div class="manage-item-info">
+                <p style="margin:0;"><strong>Title:</strong> ${title}</p>
+                <p style="margin:0; font-size: 0.875rem; color: var(--admin-text-muted);">${content.substring(0, 110)}...</p>
+              </div>
+              <div style="display: flex; gap: 0.5rem;">
+                <button type="button" onclick="populateNewsEdit('${id}')" class="btn btn-sm">Edit</button>
+                <button type="button" onclick="deleteNews('${id}')" class="remove-btn" style="width: auto; height: auto; font-size: 0.85rem; padding: 0.5rem 1rem;">Delete</button>
+              </div>
+            </div>
+          `;
+        }).join('');
+      } else {
+        container.innerHTML = `<p style="color: #ef4444; margin-top: 1rem;">${res.message || 'Failed to load news.'}</p>`;
+      }
+    }
+
+    // Save/Update News Submit
     document.getElementById('addNewsForm')?.addEventListener('submit', async (e) => {
       e.preventDefault();
+      const submitBtn = document.getElementById('submitNewsBtn');
+      const editId = document.getElementById('editNewsId').value;
+
+      submitBtn.disabled = true;
+      submitBtn.innerText = 'Publishing...';
+
       const payload = {
-        action: 'postNews',
+        action: editId ? 'editNews' : 'postNews',
+        id: editId,
         title: document.getElementById('newsTitle').value,
         imageUrl: document.getElementById('newsImg').value,
         content: document.getElementById('newsContent').value
       };
+
       const res = await postData(payload);
+      submitBtn.disabled = false;
+      submitBtn.innerText = 'Publish Announcement';
+
       if (res.status === 'success') { 
-        alert('News Published!'); 
-        e.target.reset(); 
+        alert(`Announcement ${editId ? 'Updated' : 'Published'}!`); 
+        resetNewsForm();
+        fetchNewsList();
+      } else {
+        alert('Error: ' + res.message);
       }
     });
+
+    window.populateNewsEdit = function(id) {
+      const item = loadedNewsData.find(n => ((n.ID || n.id) == id || (n.Title || n.title) == id));
+      if (!item) return;
+
+      document.getElementById('editNewsId').value = item.ID || item.id || item.Title || item.title;
+      document.getElementById('newsTitle').value = item.Title || item.title || '';
+      document.getElementById('newsImg').value = item.ImageURL || item.imageUrl || item.image || '';
+      document.getElementById('newsContent').value = item.Content || item.content || '';
+
+      document.getElementById('newsFormTitle').innerText = 'Edit Announcement / News';
+      document.getElementById('submitNewsBtn').innerText = 'Save Changes';
+      document.getElementById('cancelNewsEditBtn').style.display = 'inline-block';
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    document.getElementById('cancelNewsEditBtn')?.addEventListener('click', resetNewsForm);
+
+    function resetNewsForm() {
+      document.getElementById('editNewsId').value = '';
+      document.getElementById('addNewsForm').reset();
+      document.getElementById('newsFormTitle').innerText = 'Publish Announcement / News';
+      document.getElementById('submitNewsBtn').innerText = 'Publish Announcement';
+      document.getElementById('cancelNewsEditBtn').style.display = 'none';
+    }
+
+    window.deleteNews = async function(id) {
+      if(!confirm('Are you sure you want to delete this announcement?')) return;
+
+      const res = await postData({
+        action: 'deleteNews',
+        id: id
+      });
+
+      if(res.status === 'success') {
+        alert('Announcement deleted successfully!');
+        fetchNewsList();
+      } else {
+        alert('Delete failed: ' + res.message);
+      }
+    };
+
+    /* ==========================================================================
+       FEEDBACK PORTAL MODULE
+       ========================================================================== */
 
     // Load Feedback
     document.getElementById('loadComplaintsBtn')?.addEventListener('click', async () => {
@@ -782,8 +1065,8 @@
         res.data.reverse().forEach(item => {
           container.innerHTML += `
             <div style="background: #f8fafc; border: 1px solid var(--admin-border); border-radius: 10px; padding: 1rem; margin-bottom: 0.8rem;">
-              <p style="font-size: 0.95rem; color: var(--admin-text-main); margin: 0;">${item.Message}</p>
-              <small style="color: var(--admin-text-muted); display: block; margin-top: 0.5rem;">${item.Timestamp}</small>
+              <p style="font-size: 0.95rem; color: var(--admin-text-main); margin: 0;">${item.Message || item.message}</p>
+              <small style="color: var(--admin-text-muted); display: block; margin-top: 0.5rem;">${item.Timestamp || item.timestamp || ''}</small>
             </div>`;
         });
       } else {

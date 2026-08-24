@@ -12,14 +12,14 @@ document.addEventListener('DOMContentLoaded', () => {
   loadStaffData();
   loadNewsData();
 
-  // Handle Result Search Form
+  // Handle Result Search Form with Animated Loading Spinner
   const resultForm = document.getElementById('resultForm');
   if (resultForm) {
     resultForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       
       const submitBtn = document.getElementById('searchSubmitBtn');
-      setLoadingState(submitBtn, true);
+      setLoadingState(submitBtn, true, 'Searching...');
 
       const payload = {
         action: 'checkResult',
@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
       };
 
       const originalText = pdfBtn.innerHTML;
-      pdfBtn.innerHTML = '⏳ Generating PDF...';
+      pdfBtn.innerHTML = '<span class="spinner"></span> Generating PDF...';
       pdfBtn.disabled = true;
 
       html2pdf().set(opt).from(element).save().then(() => {
@@ -321,19 +321,36 @@ function renderNews(data) {
   }).join('');
 }
 
-// Button Loader Helper
-function setLoadingState(button, isLoading) {
+// Button Loader Helper with Animated Spinner Support
+function setLoadingState(button, isLoading, loadingText = 'Processing...') {
   if (!button) return;
-  const btnText = button.querySelector('.btn-text');
-  const spinner = button.querySelector('.spinner');
+  
+  let btnText = button.querySelector('.btn-text');
+  let spinner = button.querySelector('.spinner');
+
   if (isLoading) {
     button.disabled = true;
-    if (btnText) btnText.style.display = 'none';
-    if (spinner) spinner.style.display = 'inline-block';
+
+    // Dynamically insert spinner if not present in the HTML structure
+    if (!spinner) {
+      spinner = document.createElement('span');
+      spinner.className = 'spinner';
+      button.prepend(spinner);
+    }
+    spinner.style.display = 'inline-block';
+
+    if (btnText) {
+      button.dataset.originalText = btnText.textContent;
+      btnText.textContent = loadingText;
+    } else {
+      button.dataset.originalText = button.innerHTML;
+    }
   } else {
     button.disabled = false;
-    if (btnText) btnText.style.display = 'inline';
     if (spinner) spinner.style.display = 'none';
+    if (btnText && button.dataset.originalText) {
+      btnText.textContent = button.dataset.originalText;
+    }
   }
 }
 

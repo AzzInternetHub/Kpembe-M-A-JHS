@@ -6,36 +6,368 @@
   <title>Admin Dashboard | Kpembe M/A JHS</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    /* Specific Admin Layout Adjustments */
+    /* ==========================================================================
+       ADMIN PORTAL ENHANCED MODERN DESIGN SYSTEM
+       ========================================================================== */
+    :root {
+      --primary-orange: #e65100;
+      --primary-orange-hover: #c63f00;
+      --primary-orange-light: rgba(230, 81, 0, 0.08);
+      --admin-bg: #f1f5f9;
+      --admin-card-bg: #ffffff;
+      --admin-border: #e2e8f0;
+      --admin-text-main: #0f172a;
+      --admin-text-muted: #64748b;
+      --admin-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03);
+      --admin-shadow-md: 0 10px 25px -5px rgba(15, 23, 42, 0.05), 0 8px 10px -6px rgba(15, 23, 42, 0.03);
+      --admin-radius: 14px;
+      --admin-radius-inner: 10px;
+      --admin-transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: var(--admin-bg);
+      color: var(--admin-text-main);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      margin: 0;
+      padding: 0;
+      line-height: 1.5;
+    }
+
+    /* Container Utility */
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2rem 1.25rem;
+    }
+
+    /* Top Navigation Header Bar */
+    header {
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--admin-border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      padding: 1rem 1.5rem;
+    }
+
     .admin-nav-bar {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      max-width: 1100px;
+      margin: 0 auto;
       width: 100%;
     }
-    .remove-btn {
-      background: #ef4444;
-      color: white;
-      border: none;
-      padding: 0.5rem 0.8rem;
-      border-radius: var(--radius-sm);
-      cursor: pointer;
-      font-weight: bold;
-      transition: background 0.2s ease;
-    }
-    .remove-btn:hover {
-      background: #dc2626;
-    }
-    .subject-row {
-      display: grid;
-      grid-template-columns: 2fr 1fr 1fr auto;
-      gap: 0.5rem;
+
+    .brand {
+      display: flex;
       align-items: center;
+      gap: 1.2rem;
+    }
+
+    .school-logo {
+      width: 52px;
+      height: 52px;
+      object-fit: contain;
+      border-radius: 12px;
+      background: #ffffff;
+      padding: 4px;
+      border: 1px solid var(--admin-border);
+      box-shadow: var(--admin-shadow-sm);
+    }
+
+    .brand-text h1 {
+      margin: 0;
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--admin-text-main);
+      letter-spacing: -0.02em;
+    }
+
+    .brand-text p {
+      margin: 0.15rem 0 0 0;
+      font-size: 0.825rem;
+      color: var(--admin-text-muted);
+      font-weight: 500;
+    }
+
+    /* Buttons Modern Styling */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--primary-orange);
+      color: #ffffff;
+      font-size: 0.9rem;
+      font-weight: 600;
+      padding: 0.75rem 1.4rem;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: var(--admin-transition);
+      box-shadow: 0 2px 4px rgba(230, 81, 0, 0.2);
+    }
+
+    .btn:hover {
+      background-color: var(--primary-orange-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(230, 81, 0, 0.3);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .btn-sm {
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
+      border-radius: 8px;
+    }
+
+    /* Modern Navigation Tabs Holder */
+    .admin-tabs-nav {
+      display: flex;
+      gap: 0.5rem;
+      background: #ffffff;
+      padding: 0.5rem;
+      border-radius: 16px;
+      border: 1px solid var(--admin-border);
+      margin: 0 0 2rem 0;
+      box-shadow: var(--admin-shadow-sm);
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+
+    .admin-tabs-nav::-webkit-scrollbar {
+      display: none;
+    }
+
+    .admin-tab-btn {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      padding: 0.85rem 1.2rem;
+      font-size: 0.925rem;
+      font-weight: 600;
+      color: var(--admin-text-muted);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: var(--admin-transition);
+      white-space: nowrap;
+      text-align: center;
+    }
+
+    .admin-tab-btn:hover {
+      color: var(--admin-text-main);
+      background-color: var(--admin-bg);
+    }
+
+    .admin-tab-btn.active {
+      color: var(--primary-orange);
+      background-color: var(--primary-orange-light);
+      font-weight: 700;
+    }
+
+    .tab-content {
+      display: none;
+      animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Main Cards Framework */
+    .admin-card {
+      background: var(--admin-card-bg);
+      border: 1px solid var(--admin-border);
+      border-radius: var(--admin-radius);
+      padding: 2rem;
+      box-shadow: var(--admin-shadow-md);
+      margin-bottom: 2rem;
+    }
+
+    .admin-card h3 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--admin-text-main);
+      letter-spacing: -0.01em;
+    }
+
+    /* Grid layout */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-group label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--admin-text-muted);
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    /* Form Fields Styling */
+    .admin-card input[type="text"],
+    .admin-card input[type="date"],
+    .admin-card input[type="number"],
+    .admin-card input[type="url"],
+    .admin-card input[type="email"],
+    .admin-card select,
+    .admin-card textarea,
+    #manageSearchInput {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      border: 1.5px solid var(--admin-border);
+      border-radius: var(--admin-radius-inner);
+      background-color: #f8fafc;
+      color: var(--admin-text-main);
+      font-size: 0.95rem;
+      outline: none;
+      transition: var(--admin-transition);
+      box-sizing: border-box;
+      font-family: inherit;
+    }
+
+    .admin-card input:hover,
+    .admin-card select:hover,
+    .admin-card textarea:hover,
+    #manageSearchInput:hover {
+      border-color: #cbd5e1;
+    }
+
+    .admin-card input:focus,
+    .admin-card select:focus,
+    .admin-card textarea:focus,
+    #manageSearchInput:focus {
+      background-color: #ffffff;
+      border-color: var(--primary-orange);
+      box-shadow: 0 0 0 4px var(--primary-orange-light);
+    }
+
+    /* Subject Rows Styling */
+    .subject-rows-header {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 48px;
+      gap: 1rem;
+      padding: 0.6rem 1rem;
+      font-weight: 700;
+      font-size: 0.775rem;
+      color: var(--admin-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-bottom: 2px solid var(--admin-bg);
       margin-bottom: 0.75rem;
     }
-    @media (max-width: 600px) {
+
+    .subject-row {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 48px;
+      gap: 1rem;
+      align-items: center;
+      margin-bottom: 0.75rem;
+      background: #f8fafc;
+      padding: 0.75rem;
+      border-radius: var(--admin-radius-inner);
+      border: 1px solid var(--admin-border);
+      transition: var(--admin-transition);
+    }
+
+    .subject-row:focus-within {
+      border-color: rgba(230, 81, 0, 0.4);
+      background: #ffffff;
+    }
+
+    .subject-row input {
+      background: #ffffff !important;
+    }
+
+    /* Action & Remove Buttons */
+    .remove-btn {
+      background: #fef2f2;
+      color: #ef4444;
+      border: 1px solid #fecaca;
+      height: 42px;
+      width: 48px;
+      border-radius: var(--admin-radius-inner);
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 1.2rem;
+      transition: var(--admin-transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+    }
+
+    .remove-btn:hover {
+      background: #ef4444;
+      color: #ffffff;
+      border-color: #ef4444;
+    }
+
+    /* Footer styling */
+    footer {
+      text-align: center;
+      padding: 2.5rem 1rem;
+      color: var(--admin-text-muted);
+      font-size: 0.875rem;
+      border-top: 1px solid var(--admin-border);
+      background: #ffffff;
+      margin-top: 3rem;
+    }
+
+    /* Responsive Tweaks */
+    @media (max-width: 768px) {
+      .admin-card {
+        padding: 1.25rem;
+      }
+      
+      .subject-rows-header {
+        display: none;
+      }
+
       .subject-row {
         grid-template-columns: 1fr;
+        gap: 0.6rem;
+        padding: 1rem;
+      }
+
+      .remove-btn {
+        width: 100%;
+        height: 38px;
+        font-size: 0.9rem;
+      }
+      
+      .remove-btn::after {
+        content: " Remove Subject";
+      }
+
+      .admin-tabs-nav {
+        border-radius: 12px;
       }
     }
   </style>
@@ -46,10 +378,6 @@
   <header>
     <div class="admin-nav-bar">
       <div class="brand">
-        <!-- =============================================================== -->
-        <!-- ADMIN PANEL LOGO                                                -->
-        <!-- Uses logo.png with fallback placeholder if image isn't found    -->
-        <!-- =============================================================== -->
         <img src="logo.png" onerror="this.onerror=null; this.src='https://via.placeholder.com/60/E65100/FFFFFF?text=KPM';" alt="Kpembe Logo" class="school-logo">
         
         <div class="brand-text">
@@ -63,121 +391,169 @@
 
   <main class="container">
 
-    <!-- Upload Results Module -->
-    <section class="card" style="margin-bottom: 2rem;">
-      <div class="section-header" style="margin-bottom: 1.5rem;">
-        <h3>Upload Student Examination Results</h3>
-        <p style="color: var(--muted-text); font-size: 0.9rem;">Record continuous assessment and exam scores. Ranks and serial numbers will be computed automatically.</p>
-      </div>
+    <!-- Modern Tab Bar -->
+    <div class="admin-tabs-nav">
+      <button class="admin-tab-btn active" onclick="switchTab('tab-results', this)">Student Results</button>
+      <button class="admin-tab-btn" onclick="switchTab('tab-staff', this)">Staff Management</button>
+      <button class="admin-tab-btn" onclick="switchTab('tab-news', this)">News & Announcements</button>
+      <button class="admin-tab-btn" onclick="switchTab('tab-feedback', this)">Feedback Portal</button>
+    </div>
 
-      <form id="uploadResultsForm">
-        <div class="grid">
-          <div class="form-group">
-            <label for="adminName">Student Full Name</label>
-            <input type="text" id="adminName" required placeholder="e.g. Alhassan Abdul">
-          </div>
-          <div class="form-group">
-            <label for="adminDob">Date of Birth</label>
-            <input type="date" id="adminDob" required>
-          </div>
-          <div class="form-group">
-            <label for="adminClass">Class Category</label>
-            <select id="adminClass" required>
-              <option value="JHS 1">JHS 1</option>
-              <option value="JHS 2">JHS 2</option>
-              <option value="JHS 3">JHS 3</option>
-              <option value="Mock Examinations">Mock Examinations</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="adminYear">Academic Year</label>
-            <input type="text" id="adminYear" placeholder="2025/2026" required>
-          </div>
+    <!-- TAB 1: STUDENT RESULTS MANAGEMENT -->
+    <div id="tab-results" class="tab-content active">
+      
+      <!-- Upload / Edit Results Module -->
+      <section class="admin-card">
+        <div class="section-header" style="margin-bottom: 1.5rem; border-bottom: 1px solid var(--admin-border); padding-bottom: 0.85rem;">
+          <h3 id="formSectionTitle" style="margin: 0; font-size: 1.25rem;">Upload Student Examination Results</h3>
+          <p style="color: var(--admin-text-muted); font-size: 0.9rem; margin-top: 0.3rem;">Record class score and exam scores using the official BECE 1–9 grading system.</p>
         </div>
 
-        <h4 style="margin: 1.5rem 0 0.8rem 0; color: var(--primary-orange);">Subject Scores Breakdown</h4>
-        
-        <div id="subjectRows">
-          <div class="subject-row">
-            <input type="text" class="sub-title" placeholder="Subject Title (e.g. English Language)" required>
-            <input type="number" class="sub-ca" placeholder="C.A. (Max 30)" max="30" min="0" required>
-            <input type="number" class="sub-exam" placeholder="Exam (Max 70)" max="70" min="0" required>
+        <form id="uploadResultsForm">
+          <input type="hidden" id="editSerial" value="">
+
+          <div class="grid">
+            <div class="form-group">
+              <label for="adminName">Student Full Name</label>
+              <input type="text" id="adminName" required placeholder="e.g. Alhassan Abdul">
+            </div>
+            <div class="form-group">
+              <label for="adminDob">Date of Birth</label>
+              <input type="date" id="adminDob" required>
+            </div>
+            <div class="form-group">
+              <label for="adminClass">Class Category</label>
+              <select id="adminClass" required>
+                <option value="JHS 1">JHS 1</option>
+                <option value="JHS 2">JHS 2</option>
+                <option value="JHS 3">JHS 3</option>
+                <option value="Mock Examinations">Mock Examinations</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="adminYear">Academic Year</label>
+              <input type="text" id="adminYear" placeholder="2025/2026" required>
+            </div>
+          </div>
+
+          <h4 style="margin: 2rem 0 0.75rem 0; color: var(--primary-orange); font-size: 1rem; font-weight: 700;">Subject Scores Breakdown</h4>
+          
+          <!-- Column Labels -->
+          <div class="subject-rows-header">
+            <div>Subject Name</div>
+            <div>Class Score (30)</div>
+            <div>Exam Score (70)</div>
             <div></div>
           </div>
+
+          <div id="subjectRows">
+            <div class="subject-row">
+              <input type="text" class="sub-title" placeholder="e.g. English Language" required>
+              <input type="number" class="sub-ca" placeholder="Score (0-30)" max="30" min="0" required>
+              <input type="number" class="sub-exam" placeholder="Score (0-70)" max="70" min="0" required>
+              <div></div>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 1rem; margin-top: 1.5rem; flex-wrap: wrap;">
+            <button type="button" id="addSubjectBtn" class="btn" style="background: #475569; box-shadow: none;">+ Add Subject Field</button>
+            <button type="submit" id="submitResultsBtn" class="btn">
+              <span class="btn-text">Submit & Calculate Results</span>
+            </button>
+            <button type="button" id="cancelEditBtn" class="btn" style="background: #64748b; display: none; box-shadow: none;">Cancel Edit</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- Manage Existing Results Module -->
+      <section class="admin-card">
+        <h3 style="margin-top: 0;">Manage Student Results Records</h3>
+        <p style="color: var(--admin-text-muted); font-size: 0.9rem; margin-bottom: 1.25rem;">Search for existing records by Serial Number or Name to edit scores or remove errors.</p>
+        
+        <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+          <input type="text" id="manageSearchInput" placeholder="Enter Serial No. (e.g. KPM-JHS1-1234) or Name..." style="flex: 2; min-width: 220px;">
+          <select id="manageSearchClass" style="flex: 1; min-width: 140px;">
+            <option value="JHS 1">JHS 1</option>
+            <option value="JHS 2">JHS 2</option>
+            <option value="JHS 3">JHS 3</option>
+            <option value="Mock Examinations">Mock Examinations</option>
+          </select>
+          <button type="button" id="searchRecordBtn" class="btn">Search Record</button>
         </div>
 
-        <div style="display: flex; gap: 1rem; margin-top: 1rem; flex-wrap: wrap;">
-          <button type="button" id="addSubjectBtn" class="btn" style="background: var(--muted-text);">+ Add Subject Field</button>
-          <button type="submit" id="submitResultsBtn" class="btn">
-            <span class="btn-text">Submit & Calculate Results</span>
-          </button>
-        </div>
-      </form>
-    </section>
+        <div id="searchRecordResult"></div>
+      </section>
+    </div>
 
-    <!-- Staff Management -->
-    <section class="card" style="margin-bottom: 2rem;">
-      <h3>Add Staff Member</h3>
-      <p style="color: var(--muted-text); font-size: 0.9rem; margin-bottom: 1rem;">Add teachers and administration personnel to the public website directory.</p>
-      
-      <form id="addStaffForm">
-        <div class="grid">
-          <div class="form-group">
-            <label for="stfName">Full Name</label>
-            <input type="text" id="stfName" required placeholder="e.g. Mr. Ibrahim Musah">
+    <!-- TAB 2: STAFF MANAGEMENT -->
+    <div id="tab-staff" class="tab-content">
+      <section class="admin-card">
+        <h3 style="margin-top: 0;">Add Staff Member</h3>
+        <p style="color: var(--admin-text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">Add teachers and administration personnel to the public website directory.</p>
+        
+        <form id="addStaffForm">
+          <div class="grid">
+            <div class="form-group">
+              <label for="stfName">Full Name</label>
+              <input type="text" id="stfName" required placeholder="e.g. Mr. Ibrahim Musah">
+            </div>
+            <div class="form-group">
+              <label for="stfEmail">Email Address</label>
+              <input type="email" id="stfEmail" required placeholder="teacher@kpembejhs.edu.gh">
+            </div>
+            <div class="form-group">
+              <label for="stfPhoto">Photo Direct URL</label>
+              <input type="url" id="stfPhoto" required placeholder="https://images.unsplash.com/...">
+            </div>
           </div>
-          <div class="form-group">
-            <label for="stfEmail">Email Address</label>
-            <input type="email" id="stfEmail" required placeholder="teacher@kpembejhs.edu.gh">
+          <div class="form-group" style="margin-top: 1.25rem;">
+            <label for="stfBio">Short Profile / Bio</label>
+            <textarea id="stfBio" rows="3" placeholder="Subject teacher / Head of Department..." required></textarea>
           </div>
-          <div class="form-group">
-            <label for="stfPhoto">Photo Direct URL</label>
-            <input type="url" id="stfPhoto" required placeholder="https://images.unsplash.com/...">
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="stfBio">Short Profile / Bio</label>
-          <textarea id="stfBio" rows="2" placeholder="Subject teacher / Head of Department..." required></textarea>
-        </div>
-        <button type="submit" class="btn">Save Staff Member</button>
-      </form>
-    </section>
+          <button type="submit" class="btn" style="margin-top: 1.5rem;">Save Staff Member</button>
+        </form>
+      </section>
+    </div>
 
-    <!-- News Updates -->
-    <section class="card" style="margin-bottom: 2rem;">
-      <h3>Publish Announcement / News</h3>
-      <p style="color: var(--muted-text); font-size: 0.9rem; margin-bottom: 1rem;">Post latest announcements for parents and students.</p>
-      
-      <form id="addNewsForm">
-        <div class="grid">
-          <div class="form-group">
-            <label for="newsTitle">Announcement Title</label>
-            <input type="text" id="newsTitle" required placeholder="e.g. End of Term PTA Meeting">
+    <!-- TAB 3: NEWS UPDATES -->
+    <div id="tab-news" class="tab-content">
+      <section class="admin-card">
+        <h3 style="margin-top: 0;">Publish Announcement / News</h3>
+        <p style="color: var(--admin-text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">Post latest announcements for parents and students.</p>
+        
+        <form id="addNewsForm">
+          <div class="grid">
+            <div class="form-group">
+              <label for="newsTitle">Announcement Title</label>
+              <input type="text" id="newsTitle" required placeholder="e.g. End of Term PTA Meeting">
+            </div>
+            <div class="form-group">
+              <label for="newsImg">Feature Image URL (Optional)</label>
+              <input type="url" id="newsImg" placeholder="https://images.unsplash.com/... (optional)">
+            </div>
           </div>
-          <div class="form-group">
-            <label for="newsImg">Feature Image URL</label>
-            <input type="url" id="newsImg" required placeholder="https://images.unsplash.com/...">
+          <div class="form-group" style="margin-top: 1.25rem;">
+            <label for="newsContent">Announcement Content</label>
+            <textarea id="newsContent" rows="4" placeholder="Write the full details here..." required></textarea>
           </div>
-        </div>
-        <div class="form-group">
-          <label for="newsContent">Announcement Content</label>
-          <textarea id="newsContent" rows="3" placeholder="Write the full details here..." required></textarea>
-        </div>
-        <button type="submit" class="btn">Publish Announcement</button>
-      </form>
-    </section>
+          <button type="submit" class="btn" style="margin-top: 1.5rem;">Publish Announcement</button>
+        </form>
+      </section>
+    </div>
 
-    <!-- Read Anonymous Feedback -->
-    <section class="card">
-      <h3>Submitted Feedback & Complaints</h3>
-      <p style="color: var(--muted-text); font-size: 0.9rem; margin-bottom: 1rem;">Review anonymous messages submitted via the online feedback portal.</p>
-      
-      <button id="loadComplaintsBtn" class="btn" style="background: var(--muted-text); margin-bottom: 1.5rem;">
-        🔄 Refresh Feedback List
-      </button>
+    <!-- TAB 4: READ ANONYMOUS FEEDBACK -->
+    <div id="tab-feedback" class="tab-content">
+      <section class="admin-card">
+        <h3 style="margin-top: 0;">Submitted Feedback & Complaints</h3>
+        <p style="color: var(--admin-text-muted); font-size: 0.9rem; margin-bottom: 1.25rem;">Review anonymous messages submitted via the online feedback portal.</p>
+        
+        <button id="loadComplaintsBtn" class="btn" style="background: #475569; margin-bottom: 1.5rem; box-shadow: none;">
+          Refresh Feedback List
+        </button>
 
-      <div id="complaintsList"></div>
-    </section>
+        <div id="complaintsList"></div>
+      </section>
+    </div>
 
   </main>
 
@@ -188,27 +564,143 @@
   <script>
     const API_URL = 'https://script.google.com/macros/s/AKfycbxGnfXB2r_MFJJEpHN9I8PWETb9EW57Y954WYmNMsJ5Bttn-EPuzgvYjGoIeA-Kt5xC/exec';
 
-    // Add Dynamic Subject Inputs
+    let currentSearchedRecord = null;
+
+    // Tab Switching Functionality
+    function switchTab(tabId, btnElement) {
+      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+      document.querySelectorAll('.admin-tab-btn').forEach(btn => btn.classList.remove('active'));
+
+      document.getElementById(tabId).classList.add('active');
+      btnElement.classList.add('active');
+    }
+
+    // Dynamic Subject Rows Handler
     document.getElementById('addSubjectBtn')?.addEventListener('click', () => {
+      addSubjectRow();
+    });
+
+    function addSubjectRow(title = '', ca = '', exam = '') {
       const container = document.getElementById('subjectRows');
       const row = document.createElement('div');
       row.className = 'subject-row';
       row.innerHTML = `
-        <input type="text" class="sub-title" placeholder="Subject Title" required>
-        <input type="number" class="sub-ca" placeholder="C.A. (30)" max="30" min="0" required>
-        <input type="number" class="sub-exam" placeholder="Exam (70)" max="70" min="0" required>
-        <button type="button" class="remove-btn" onclick="this.parentElement.remove()">&times;</button>
+        <input type="text" class="sub-title" placeholder="Subject Title" value="${title}" required>
+        <input type="number" class="sub-ca" placeholder="Class score (30)" max="30" min="0" value="${ca}" required>
+        <input type="number" class="sub-exam" placeholder="Exam (70)" max="70" min="0" value="${exam}" required>
+        <button type="button" class="remove-btn" onclick="this.parentElement.remove()" title="Remove row">&times;</button>
       `;
       container.appendChild(row);
+    }
+
+    // Search Records Logic
+    document.getElementById('searchRecordBtn')?.addEventListener('click', async () => {
+      const query = document.getElementById('manageSearchInput').value.trim();
+      const className = document.getElementById('manageSearchClass').value;
+      const resContainer = document.getElementById('searchRecordResult');
+
+      if(!query) {
+        alert('Please enter a Serial Number or Student Name to search.');
+        return;
+      }
+
+      resContainer.innerHTML = '<p style="color: var(--admin-text-muted); margin-top: 1rem;">Searching database...</p>';
+
+      const res = await postData({
+        action: 'checkResult',
+        serial: query,
+        name: query,
+        className: className
+      });
+
+      if(res.status === 'success') {
+        currentSearchedRecord = res.result;
+        resContainer.innerHTML = `
+          <div style="background: #f8fafc; border: 1px solid var(--primary-orange); border-radius: 12px; padding: 1.2rem; margin-top: 1.25rem;">
+            <p style="margin: 0 0 0.5rem 0;"><strong>Student:</strong> ${res.result.name} | <strong>Serial:</strong> ${res.result.serial}</p>
+            <p style="margin: 0 0 0.5rem 0;"><strong>Class:</strong> ${res.result.className} | <strong>Year:</strong> ${res.result.year || '2025/2026'}</p>
+            <p style="margin: 0 0 1rem 0;"><strong>Total Score:</strong> ${res.result.totalScore} | <strong>Rank:</strong> ${res.result.position}</p>
+            <div style="display: flex; gap: 0.5rem;">
+              <button type="button" onclick="populateEditForm()" class="btn btn-sm">Edit Scores</button>
+              <button type="button" onclick="deleteRecord('${res.result.serial}', '${res.result.className}')" class="remove-btn" style="width: auto; height: auto; font-size: 0.85rem; padding: 0.5rem 1rem;">Delete Record</button>
+            </div>
+          </div>
+        `;
+      } else {
+        resContainer.innerHTML = `<p style="color: #ef4444; margin-top: 1rem;">${res.message || 'No record found.'}</p>`;
+      }
     });
 
-    // Handle Upload Results Submissions
+    // Populate Edit Form
+    window.populateEditForm = function() {
+      if(!currentSearchedRecord) return;
+
+      document.getElementById('editSerial').value = currentSearchedRecord.serial;
+      document.getElementById('adminName').value = currentSearchedRecord.name;
+      document.getElementById('adminDob').value = currentSearchedRecord.dob;
+      document.getElementById('adminClass').value = currentSearchedRecord.className;
+      document.getElementById('adminYear').value = currentSearchedRecord.year || '2025/2026';
+
+      const container = document.getElementById('subjectRows');
+      container.innerHTML = '';
+
+      if(currentSearchedRecord.subjects && currentSearchedRecord.subjects.length > 0) {
+        currentSearchedRecord.subjects.forEach(s => addSubjectRow(s.title, s.ca, s.exam));
+      } else {
+        addSubjectRow();
+      }
+
+      document.getElementById('formSectionTitle').innerText = 'Edit Student Examination Results (' + currentSearchedRecord.serial + ')';
+      document.getElementById('submitResultsBtn').innerHTML = '<span class="btn-text">Save Changes</span>';
+      document.getElementById('cancelEditBtn').style.display = 'inline-block';
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    // Cancel Edit Operation
+    document.getElementById('cancelEditBtn')?.addEventListener('click', () => {
+      resetResultsForm();
+    });
+
+    function resetResultsForm() {
+      document.getElementById('editSerial').value = '';
+      document.getElementById('uploadResultsForm').reset();
+      document.getElementById('subjectRows').innerHTML = '';
+      addSubjectRow();
+      document.getElementById('formSectionTitle').innerText = 'Upload Student Examination Results';
+      document.getElementById('submitResultsBtn').innerHTML = '<span class="btn-text">Submit & Calculate Results</span>';
+      document.getElementById('cancelEditBtn').style.display = 'none';
+      currentSearchedRecord = null;
+    }
+
+    // Delete Record Implementation
+    window.deleteRecord = async function(serial, className) {
+      if(!confirm(`Are you sure you want to permanently delete result record (${serial})?`)) return;
+
+      const res = await postData({
+        action: 'deleteResult',
+        serial: serial,
+        className: className
+      });
+
+      if(res.status === 'success') {
+        alert('Record deleted successfully!');
+        document.getElementById('searchRecordResult').innerHTML = '';
+        resetResultsForm();
+      } else {
+        alert('Delete failed: ' + res.message);
+      }
+    };
+
+    // Upload / Edit Submit
     document.getElementById('uploadResultsForm')?.addEventListener('submit', async (e) => {
       e.preventDefault();
       
       const submitBtn = document.getElementById('submitResultsBtn');
       submitBtn.disabled = true;
       submitBtn.innerText = 'Publishing...';
+
+      const editSerial = document.getElementById('editSerial').value;
 
       const subjects = [];
       document.querySelectorAll('.subject-row').forEach(row => {
@@ -219,8 +711,11 @@
         });
       });
 
+      const actionType = editSerial ? 'editResult' : 'uploadResults';
+
       const payload = {
-        action: 'uploadResults',
+        action: actionType,
+        serial: editSerial,
         studentName: document.getElementById('adminName').value,
         dob: document.getElementById('adminDob').value,
         className: document.getElementById('adminClass').value,
@@ -233,14 +728,15 @@
       submitBtn.innerText = 'Submit & Calculate Results';
 
       if (res.status === 'success') {
-        alert(`Results published successfully!\n\nGenerated Unique Serial Number:\n${res.serial}`);
-        e.target.reset();
+        alert(`Results ${editSerial ? 'updated' : 'published'} successfully!\n\nSerial Number:\n${res.serial}`);
+        resetResultsForm();
+        document.getElementById('searchRecordResult').innerHTML = '';
       } else {
-        alert('Upload Error: ' + res.message);
+        alert('Error: ' + res.message);
       }
     });
 
-    // Handle Staff Submission
+    // Staff Submit
     document.getElementById('addStaffForm')?.addEventListener('submit', async (e) => {
       e.preventDefault();
       const payload = {
@@ -257,7 +753,7 @@
       }
     });
 
-    // Handle News Submission
+    // News Submit
     document.getElementById('addNewsForm')?.addEventListener('submit', async (e) => {
       e.preventDefault();
       const payload = {
@@ -273,25 +769,25 @@
       }
     });
 
-    // Load Complaints
+    // Load Feedback
     document.getElementById('loadComplaintsBtn')?.addEventListener('click', async () => {
       const btn = document.getElementById('loadComplaintsBtn');
       btn.innerText = 'Loading...';
       const res = await postData({ action: 'getComplaints' });
-      btn.innerText = '🔄 Refresh Feedback List';
+      btn.innerText = 'Refresh Feedback List';
       
       const container = document.getElementById('complaintsList');
       container.innerHTML = '';
       if(res.data && res.data.length > 0) {
         res.data.reverse().forEach(item => {
           container.innerHTML += `
-            <div style="background: rgba(248, 250, 252, 0.9); border: 1px solid #e2e8f0; border-radius: 12px; padding: 1rem; margin-bottom: 0.8rem;">
-              <p style="font-size: 0.95rem; color: var(--dark-text);">${item.Message}</p>
-              <small style="color: var(--muted-text); display: block; margin-top: 0.4rem;">${item.Timestamp}</small>
+            <div style="background: #f8fafc; border: 1px solid var(--admin-border); border-radius: 10px; padding: 1rem; margin-bottom: 0.8rem;">
+              <p style="font-size: 0.95rem; color: var(--admin-text-main); margin: 0;">${item.Message}</p>
+              <small style="color: var(--admin-text-muted); display: block; margin-top: 0.5rem;">${item.Timestamp}</small>
             </div>`;
         });
       } else {
-        container.innerHTML = '<p style="color: var(--muted-text);">No feedback entries received yet.</p>';
+        container.innerHTML = '<p style="color: var(--admin-text-muted);">No feedback entries received yet.</p>';
       }
     });
 

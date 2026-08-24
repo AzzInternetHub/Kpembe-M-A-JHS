@@ -289,7 +289,7 @@ header {
   border: 1px solid var(--glass-border);
 }
 
-/* 7. FORMS & BUTTONS */
+/* 7. FORMS, BUTTONS & ANIMATED LOADING SPINNER */
 .btn {
   background-color: var(--primary-orange);
   color: white;
@@ -302,12 +302,36 @@ header {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.2s ease, transform 0.15s ease;
+  gap: 0.5rem;
+  transition: background-color 0.2s ease, transform 0.15s ease, opacity 0.2s ease;
 }
 
 .btn:hover {
   background-color: var(--secondary-orange);
   transform: translateY(-1px);
+}
+
+.btn:disabled {
+  opacity: 0.75;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Dynamic Spinner Icon Animation */
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: spin 0.75s linear infinite;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 .form-group {

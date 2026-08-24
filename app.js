@@ -5,6 +5,7 @@
 const API_URL = 'https://script.google.com/macros/s/AKfycbxGnfXB2r_MFJJEpHN9I8PWETb9EW57Y954WYmNMsJ5Bttn-EPuzgvYjGoIeA-Kt5xC/exec';
 
 document.addEventListener('DOMContentLoaded', () => {
+  initThemeToggle();
   initTabs();
   initPWAInstallPrompt();
   initImageLightbox();
@@ -97,6 +98,34 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
+// Light/Dark Theme Switcher Manager
+function initThemeToggle() {
+  const themeToggleBtn = document.getElementById("themeToggleBtn");
+  if (!themeToggleBtn) return;
+
+  const themeIcon = themeToggleBtn.querySelector(".theme-icon");
+
+  // Load saved theme or default to 'light'
+  const currentTheme = localStorage.getItem("theme") || "light";
+  document.documentElement.setAttribute("data-theme", currentTheme);
+  if (themeIcon) {
+    themeIcon.textContent = currentTheme === "dark" ? "☀️" : "🌙";
+  }
+
+  themeToggleBtn.addEventListener("click", () => {
+    let theme = document.documentElement.getAttribute("data-theme");
+    if (theme === "dark") {
+      document.documentElement.setAttribute("data-theme", "light");
+      localStorage.setItem("theme", "light");
+      if (themeIcon) themeIcon.textContent = "🌙";
+    } else {
+      document.documentElement.setAttribute("data-theme", "dark");
+      localStorage.setItem("theme", "dark");
+      if (themeIcon) themeIcon.textContent = "☀️";
+    }
+  });
+}
+
 // Tab Navigation Manager
 function initTabs() {
   const switchTab = (targetId) => {
@@ -130,16 +159,18 @@ function initPWAInstallPrompt() {
 
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 
-  if (isIOS) {
+  if (isIOS && pwaBanner) {
     pwaBanner.style.display = 'flex';
-    pwaInstruction.textContent = 'Tap Share button (iOS) and select "Add to Home Screen"';
-    installBtn.style.display = 'none';
+    if (pwaInstruction) {
+      pwaInstruction.textContent = 'Tap Share button (iOS) and select "Add to Home Screen"';
+    }
+    if (installBtn) installBtn.style.display = 'none';
   }
 
   window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt = e;
-    pwaBanner.style.display = 'flex';
+    if (pwaBanner) pwaBanner.style.display = 'flex';
   });
 
   if (installBtn) {
@@ -147,7 +178,7 @@ function initPWAInstallPrompt() {
       if (deferredPrompt) {
         deferredPrompt.prompt();
         const { outcome } = await deferredPrompt.userChoice;
-        if (outcome === 'accepted') {
+        if (outcome === 'accepted' && pwaBanner) {
           pwaBanner.style.display = 'none';
         }
         deferredPrompt = null;
@@ -157,7 +188,7 @@ function initPWAInstallPrompt() {
 
   if (closeBtn) {
     closeBtn.addEventListener('click', () => {
-      pwaBanner.style.display = 'none';
+      if (pwaBanner) pwaBanner.style.display = 'none';
     });
   }
 }
@@ -208,6 +239,8 @@ function initImageLightbox() {
   const lightbox = document.getElementById('lightbox');
   const lightboxImg = document.getElementById('lightboxImg');
 
+  if (!lightbox || !lightboxImg) return;
+
   document.body.addEventListener('click', (e) => {
     const targetImg = e.target.closest('.zoomable') || (e.target.tagName === 'IMG' && e.target.closest('.img-preview-container'));
     if (targetImg) {
@@ -242,7 +275,6 @@ function renderStaff(data) {
     <div class="card" style="text-align:center;">
       <div class="img-preview-container" style="display:inline-block; position:relative;">
         <img src="${stf.PhotoURL}" alt="${stf.Name}" class="zoomable" style="width:95px; height:95px; border-radius:50%; object-fit:cover; border:3px solid var(--light-orange);">
-        <span class="photo-hint-badge">🔍 View</span>
       </div>
       <h4 style="margin-top:0.4rem;">${stf.Name}</h4>
       <p style="font-size:0.8rem; color:var(--muted-text);">${stf.Email}</p>
@@ -273,7 +305,6 @@ function renderNews(data) {
     const imageHTML = hasImage ? `
       <div class="img-preview-container" style="position:relative; margin-bottom:0.8rem;">
         <img src="${item.ImageURL}" class="zoomable" style="width:100%; height:160px; object-fit:cover; border-radius:var(--radius-sm); display:block;">
-        <span class="photo-hint-badge">🔍 Click photo to expand</span>
       </div>
     ` : '';
 
@@ -290,6 +321,7 @@ function renderNews(data) {
 
 // Button Loader Helper
 function setLoadingState(button, isLoading) {
+  if (!button) return;
   const btnText = button.querySelector('.btn-text');
   const spinner = button.querySelector('.spinner');
   if (isLoading) {

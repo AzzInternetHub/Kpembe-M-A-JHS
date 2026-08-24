@@ -70,8 +70,8 @@ document.addEventListener('DOMContentLoaded', () => {
         image:        { type: 'jpeg', quality: 0.98 },
         html2canvas:  { 
           scale: 2, 
-          useCORS: true,           // Bypasses cross-origin image locking causing blank renders
-          allowTaint: true,        // Allows rendering local & external images safely
+          useCORS: true,           
+          allowTaint: true,        
           logging: false,
           letterRendering: true,
           scrollY: 0,
@@ -80,7 +80,6 @@ document.addEventListener('DOMContentLoaded', () => {
         jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
       };
 
-      // Button visual state feedback
       const originalText = pdfBtn.innerHTML;
       pdfBtn.innerHTML = '⏳ Generating PDF...';
       pdfBtn.disabled = true;
@@ -186,12 +185,11 @@ function displayResults(data) {
         <td>${sub.exam}</td>
         <td style="font-weight: 700; color: var(--primary-orange);">${sub.total}</td>
         <td><strong>${sub.grade}</strong></td>
-        <td>${sub.interp}</td>
-        <td>${sub.remark}</td>
+        <td>${sub.remark || sub.interp}</td>
       </tr>
     `).join('');
   } else {
-    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;">No subject results found.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;">No subject results found.</td></tr>`;
   }
 
   summaryDiv.innerHTML = `
@@ -253,7 +251,7 @@ function renderStaff(data) {
   `).join('');
 }
 
-// Fetch News Items with Local Storage Caching & Image Preview Visuals
+// Fetch News Items with Optional Image Rendering & Local Storage Caching
 async function loadNewsData() {
   const newsGrid = document.getElementById('newsGrid');
   if (!newsGrid) return;
@@ -270,17 +268,24 @@ async function loadNewsData() {
 
 function renderNews(data) {
   const newsGrid = document.getElementById('newsGrid');
-  newsGrid.innerHTML = data.map(item => `
-    <div class="card">
+  newsGrid.innerHTML = data.map(item => {
+    const hasImage = item.ImageURL && item.ImageURL.trim() !== '';
+    const imageHTML = hasImage ? `
       <div class="img-preview-container" style="position:relative; margin-bottom:0.8rem;">
         <img src="${item.ImageURL}" class="zoomable" style="width:100%; height:160px; object-fit:cover; border-radius:var(--radius-sm); display:block;">
         <span class="photo-hint-badge">🔍 Click photo to expand</span>
       </div>
-      <h4>${item.Title}</h4>
-      <small style="color:var(--muted-text);">${item.Date}</small>
-      <p style="margin-top:0.5rem; font-size:0.9rem;">${item.Content}</p>
-    </div>
-  `).join('');
+    ` : '';
+
+    return `
+      <div class="card">
+        ${imageHTML}
+        <h4>${item.Title}</h4>
+        <small style="color:var(--muted-text);">${item.Date}</small>
+        <p style="margin-top:0.5rem; font-size:0.9rem;">${item.Content}</p>
+      </div>
+    `;
+  }).join('');
 }
 
 // Button Loader Helper

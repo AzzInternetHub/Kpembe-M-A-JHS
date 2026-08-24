@@ -273,10 +273,11 @@ function renderStaff(data) {
   const staffGrid = document.getElementById('staffGrid');
   staffGrid.innerHTML = data.map(stf => `
     <div class="card" style="text-align:center;">
-      <div class="img-preview-container" style="display:inline-block; position:relative;">
-        <img src="${stf.PhotoURL}" alt="${stf.Name}" class="zoomable" style="width:95px; height:95px; border-radius:50%; object-fit:cover; border:3px solid var(--light-orange);">
+      <div class="img-preview-container" style="display:inline-block; position:relative; cursor:pointer;" title="Click to view full image">
+        <img src="${stf.PhotoURL}" alt="${stf.Name}" class="zoomable staff-avatar">
+        <span class="view-badge">🔍 Click to view</span>
       </div>
-      <h4 style="margin-top:0.4rem;">${stf.Name}</h4>
+      <h4 style="margin-top:0.8rem; font-size:1.05rem; font-weight:700;">${stf.Name}</h4>
       <p style="font-size:0.8rem; color:var(--muted-text);">${stf.Email}</p>
       <p style="margin-top:0.5rem; font-size:0.85rem;">${stf.Bio}</p>
     </div>
@@ -303,8 +304,9 @@ function renderNews(data) {
   newsGrid.innerHTML = data.map(item => {
     const hasImage = item.ImageURL && item.ImageURL.trim() !== '';
     const imageHTML = hasImage ? `
-      <div class="img-preview-container" style="position:relative; margin-bottom:0.8rem;">
+      <div class="img-preview-container" style="position:relative; margin-bottom:0.8rem; cursor:pointer;" title="Click to view full image">
         <img src="${item.ImageURL}" class="zoomable" style="width:100%; height:160px; object-fit:cover; border-radius:var(--radius-sm); display:block;">
+        <span class="view-badge">🔍 Click to view</span>
       </div>
     ` : '';
 
